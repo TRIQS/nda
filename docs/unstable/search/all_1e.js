@@ -1,8 +1,8 @@
 var searchData=
 [
   ['t_5f_0',['t_',['../group__clef__placeholders.html#ga5228a8edcef97ecaff73f16ce67ffd3d',1,'nda::clef::literals']]],
-  ['tan_1',['tan',['../group__clef__expr.html#ga418bc0bc645a4e7382c0760f3d0311e8',1,'nda::clef::tan()'],['../group__av__math.html#ga587ee662f319d655921a44c3dd940380',1,'nda::tan()']]],
-  ['tanh_2',['tanh',['../group__clef__expr.html#gac3b1f4196f2f191626a620ba86e48ce4',1,'nda::clef::tanh()'],['../group__av__math.html#ga247a941e48673777e3f81bd6511a5069',1,'nda::tanh()']]],
+  ['tan_1',['tan',['../group__clef__expr.html#ga418bc0bc645a4e7382c0760f3d0311e8',1,'nda::clef::tan()'],['../group__av__math.html#ga9626290fe4eeb1c1e5754373095c0da0',1,'nda::tan(S s)'],['../group__av__math.html#ga587ee662f319d655921a44c3dd940380',1,'nda::tan(A &amp;&amp;a)']]],
+  ['tanh_2',['tanh',['../group__clef__expr.html#gac3b1f4196f2f191626a620ba86e48ce4',1,'nda::clef::tanh()'],['../group__av__math.html#ga559867f2b852a2731075de04c491867a',1,'nda::tanh(S s)'],['../group__av__math.html#ga247a941e48673777e3f81bd6511a5069',1,'nda::tanh(A &amp;&amp;a)']]],
   ['tau_5f_3',['tau_',['../group__clef__placeholders.html#ga20e75ffa66da7851948e0e28fc6ed1db',1,'nda::clef::literals']]],
   ['tblis_20support_4',['Prerequisite: building with TBLIS support',['../ex9.html#ex9_p2',1,'']]],
   ['tblis_5finterface_2ecpp_5',['tblis_interface.cpp',['../tblis__interface_8cpp.html',1,'']]],

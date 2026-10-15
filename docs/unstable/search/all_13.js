@@ -82,7 +82,7 @@ var searchData=
   ['is_5fvalid_79',['is_valid',['../group__utils__perms.html#ga506be5a2b784ed0b8145f75f14477229',1,'nda::permutations::is_valid()'],['../group__av__sym.html#ga600dcc224843d9e1c224dfdf54b71adf',1,'nda::is_valid(A const &amp;a, std::array&lt; long, static_cast&lt; std::size_t &gt;(get_rank&lt; A &gt;)&gt; const &amp;idx)']]],
   ['is_5fview_5fv_80',['is_view_v',['../group__av__utils.html#gaac83978354c5393bf244da0a826f5778',1,'nda']]],
   ['is_5fview_5fv_3c_20basic_5farray_5fview_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20accessorpolicy_2c_20owningpolicy_20_3e_20_3e_81',['is_view_v&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;',['../group__av__utils.html#ga27520f63afb420a97a49eb9ec5cda61e',1,'nda']]],
-  ['isnan_82',['isnan',['../group__av__math.html#gaa79c8329c178c50f2eb1e3ff129750e6',1,'nda']]],
+  ['isnan_82',['isnan',['../group__av__math.html#ga39069a6a20ffbe746f8d4b2bfa5232c2',1,'nda::isnan(S s)'],['../group__av__math.html#ga4a1918ed365d7d4982d01b7a58dbf1ce',1,'nda::isnan(A &amp;&amp;a)']]],
   ['issues_83',['Issues',['../issues.html',1,'']]],
   ['iterator_84',['iterator',['../classnda_1_1basic__array.html#a88bf11ed6d53634a56271ccdb2889860',1,'nda::basic_array::iterator'],['../classnda_1_1basic__array__view.html#a726d6433c54a2cc805600203706d5fb0',1,'nda::basic_array_view::iterator']]],
   ['iterator_5fcategory_85',['iterator_category',['../classnda_1_1array__iterator.html#a3f8d25adab285ef72ebc510c10bb64a3',1,'nda::array_iterator::iterator_category'],['../classnda_1_1array__iterator_3_011_00_01_t_00_01_pointer_01_4.html#af5df111dac89fbcd200af35a55010a97',1,'nda::array_iterator&lt; 1, T, Pointer &gt;::iterator_category']]],

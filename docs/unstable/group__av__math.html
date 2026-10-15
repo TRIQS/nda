@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__av__mat
 <div class="line">  <span class="keyword">auto</span> A = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>({{1, 2}, {3, 4}});</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// square the elements of A</span></div>
-<div class="line">  <span class="keyword">auto</span> ex = <a class="code hl_function" href="#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a>(A, 2); <span class="comment">// ex is a lazy expression</span></div>
+<div class="line">  <span class="keyword">auto</span> ex = <a class="code hl_function" href="#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a>(A, 2); <span class="comment">// ex is a lazy expression</span></div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// evaluate the lazy expression by constructing a new array</span></div>
 <div class="line">  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a> A_sq = ex;</div>
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__av__mat
 <div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a>(ex) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__av__factories_html_ga1ef017428f20125233751e5e985fdc90"><div class="ttname"><a href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a></div><div class="ttdeci">decltype(auto) make_regular(A &amp;&amp;a)</div><div class="ttdoc">Make a given object regular.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00225">basic_functions.hpp:225</a></div></div>
-<div class="ttc" id="agroup__av__math_html_ga0b709fa1110a9315aa2cc73af28c0acf"><div class="ttname"><a href="#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, S p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00084">mapped_functions.hpp:84</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gaffb864438c69796ad0b4e2e8b941ded6"><div class="ttname"><a href="#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a></div><div class="ttdeci">auto pow(S s, P p)</div><div class="ttdoc">Function pow for nda::Scalar types (uses std::pow).</div></div>
 <div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
 </div><!-- fragment --><p>Output:</p>
@@ -158,7 +158,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__av__mat
 <div class="line"> </div>
 <div class="line">[[1,4]</div>
 <div class="line"> [9,16]]</div>
-</div><!-- fragment --></div><table class="memberdecls">
+</div><!-- fragment --><p>All functions also accept scalars. For the <span class="tt">&lt;cmath&gt;</span> functions, the scalar overloads are the <span class="tt">std</span> ones, while <a class="el" href="#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="#ga801930e88ab85629067870e91ab9f97f" title="Function real for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::real</a>, <a class="el" href="#gaa337f00c9324d22f827b9759adb22f18" title="Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::imag</a>, <a class="el" href="#gac1d8ab79eedda3a771672ec4f410e69b" title="Function abs2 for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::abs2</a>, <a class="el" href="#gac5e6cabd373fe6b872c6c0d7fa9803c1" title="Reciprocal function for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::reciprocal</a>, <a class="el" href="#gad4adce242cbf197036123b5375cbc356" title="Function max for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::max</a> and <a class="el" href="#ga9e96dcd41ecefd5f0a1f514bbfe6c792" title="Function min for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::min</a> provide their own. The exception is <a class="el" href="#ga39069a6a20ffbe746f8d4b2bfa5232c2" title="Function isnan for real nda::Scalar types (uses std::isnan).">nda::isnan</a> for complex scalars, which is not covered by <span class="tt">std::isnan</span> and is true if either component is NaN.</p>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:nda_3A_3Aexpr_5Fcall_3C_20F_2C_20As_20_3E" id="r_nda_3A_3Aexpr_5Fcall_3C_20F_2C_20As_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1expr__call.html">nda::expr_call&lt; F, As &gt;</a></td></tr>
@@ -168,58 +169,100 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga4ed509e92dd77b65eadca1347b23af35" id="r_ga4ed509e92dd77b65eadca1347b23af35"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
+<tr class="memitem:ga4ed509e92dd77b65eadca1347b23af35" id="r_ga4ed509e92dd77b65eadca1347b23af35"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga4ed509e92dd77b65eadca1347b23af35 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga4ed509e92dd77b65eadca1347b23af35">nda::abs</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga4ed509e92dd77b65eadca1347b23af35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function abs for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga4ed509e92dd77b65eadca1347b23af35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function abs for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga856d99e9fbc136affcc3a42f55de5840" id="r_ga856d99e9fbc136affcc3a42f55de5840"><td class="memTemplParams" colspan="2"><a id="ga856d99e9fbc136affcc3a42f55de5840" name="ga856d99e9fbc136affcc3a42f55de5840"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga856d99e9fbc136affcc3a42f55de5840 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::abs</b> (S s)</td></tr>
+<tr class="memdesc:ga856d99e9fbc136affcc3a42f55de5840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function abs for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::abs</span>). <br /></td></tr>
 <tr class="memitem:gac1d8ab79eedda3a771672ec4f410e69b" id="r_gac1d8ab79eedda3a771672ec4f410e69b"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:gac1d8ab79eedda3a771672ec4f410e69b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gac1d8ab79eedda3a771672ec4f410e69b">nda::abs2</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:gac1d8ab79eedda3a771672ec4f410e69b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function abs2 for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:gacf26e60ac50147f333697565cb8e43ea" id="r_gacf26e60ac50147f333697565cb8e43ea"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memitem:gacf26e60ac50147f333697565cb8e43ea" id="r_gacf26e60ac50147f333697565cb8e43ea"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:gacf26e60ac50147f333697565cb8e43ea template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gacf26e60ac50147f333697565cb8e43ea">nda::acos</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gacf26e60ac50147f333697565cb8e43ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function acos for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:gacbd35061df7dda2e9184781a0d75ca60" id="r_gacbd35061df7dda2e9184781a0d75ca60"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:gacf26e60ac50147f333697565cb8e43ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function acos for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga97c79db822518ebcc96e86666bcd53c5" id="r_ga97c79db822518ebcc96e86666bcd53c5"><td class="memTemplParams" colspan="2"><a id="ga97c79db822518ebcc96e86666bcd53c5" name="ga97c79db822518ebcc96e86666bcd53c5"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga97c79db822518ebcc96e86666bcd53c5 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::acos</b> (S s)</td></tr>
+<tr class="memdesc:ga97c79db822518ebcc96e86666bcd53c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function acos for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::acos</span>). <br /></td></tr>
+<tr class="memitem:gacbd35061df7dda2e9184781a0d75ca60" id="r_gacbd35061df7dda2e9184781a0d75ca60"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:gacbd35061df7dda2e9184781a0d75ca60 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gacbd35061df7dda2e9184781a0d75ca60">nda::asin</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gacbd35061df7dda2e9184781a0d75ca60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function asin for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga6b89fa038521f09812a17a8ab22b5708" id="r_ga6b89fa038521f09812a17a8ab22b5708"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:gacbd35061df7dda2e9184781a0d75ca60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function asin for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga201c048091aca70d6ba52ef54dbc022f" id="r_ga201c048091aca70d6ba52ef54dbc022f"><td class="memTemplParams" colspan="2"><a id="ga201c048091aca70d6ba52ef54dbc022f" name="ga201c048091aca70d6ba52ef54dbc022f"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga201c048091aca70d6ba52ef54dbc022f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::asin</b> (S s)</td></tr>
+<tr class="memdesc:ga201c048091aca70d6ba52ef54dbc022f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function asin for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::asin</span>). <br /></td></tr>
+<tr class="memitem:ga6b89fa038521f09812a17a8ab22b5708" id="r_ga6b89fa038521f09812a17a8ab22b5708"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga6b89fa038521f09812a17a8ab22b5708 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga6b89fa038521f09812a17a8ab22b5708">nda::atan</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga6b89fa038521f09812a17a8ab22b5708"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function atan for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga6b89fa038521f09812a17a8ab22b5708"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function atan for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga313f963cd0daf190753df900e4b464dc" id="r_ga313f963cd0daf190753df900e4b464dc"><td class="memTemplParams" colspan="2"><a id="ga313f963cd0daf190753df900e4b464dc" name="ga313f963cd0daf190753df900e4b464dc"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga313f963cd0daf190753df900e4b464dc template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::atan</b> (S s)</td></tr>
+<tr class="memdesc:ga313f963cd0daf190753df900e4b464dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function atan for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::atan</span>). <br /></td></tr>
 <tr class="memitem:gaed558141a1f01cb2974b0cc4fc4d04ff" id="r_gaed558141a1f01cb2974b0cc4fc4d04ff"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:gaed558141a1f01cb2974b0cc4fc4d04ff template"><td class="memItemLeft">decltype(auto)&#160;</td><td class="memItemRight"><a class="el" href="#gaed558141a1f01cb2974b0cc4fc4d04ff">nda::conj</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:gaed558141a1f01cb2974b0cc4fc4d04ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function conj for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types with a complex value type).  <br /></td></tr>
-<tr class="memitem:ga08b3f5539d4426554f981cd417363323" id="r_ga08b3f5539d4426554f981cd417363323"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memitem:ga08b3f5539d4426554f981cd417363323" id="r_ga08b3f5539d4426554f981cd417363323"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga08b3f5539d4426554f981cd417363323 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga08b3f5539d4426554f981cd417363323">nda::cos</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga08b3f5539d4426554f981cd417363323"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cos for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:gabd5f49e42bad17d37bb531e7775db371" id="r_gabd5f49e42bad17d37bb531e7775db371"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:ga08b3f5539d4426554f981cd417363323"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cos for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:gacfd47932d0156ca0591b92aa02e990b7" id="r_gacfd47932d0156ca0591b92aa02e990b7"><td class="memTemplParams" colspan="2"><a id="gacfd47932d0156ca0591b92aa02e990b7" name="gacfd47932d0156ca0591b92aa02e990b7"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:gacfd47932d0156ca0591b92aa02e990b7 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::cos</b> (S s)</td></tr>
+<tr class="memdesc:gacfd47932d0156ca0591b92aa02e990b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cos for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::cos</span>). <br /></td></tr>
+<tr class="memitem:gabd5f49e42bad17d37bb531e7775db371" id="r_gabd5f49e42bad17d37bb531e7775db371"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:gabd5f49e42bad17d37bb531e7775db371 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gabd5f49e42bad17d37bb531e7775db371">nda::cosh</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gabd5f49e42bad17d37bb531e7775db371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cosh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:gabd5f49e42bad17d37bb531e7775db371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cosh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga909d6f4748b85e5e0f7db7b23e7e5780" id="r_ga909d6f4748b85e5e0f7db7b23e7e5780"><td class="memTemplParams" colspan="2"><a id="ga909d6f4748b85e5e0f7db7b23e7e5780" name="ga909d6f4748b85e5e0f7db7b23e7e5780"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga909d6f4748b85e5e0f7db7b23e7e5780 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::cosh</b> (S s)</td></tr>
+<tr class="memdesc:ga909d6f4748b85e5e0f7db7b23e7e5780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function cosh for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::cosh</span>). <br /></td></tr>
 <tr class="memitem:gab2bf2219a90e857564aae58577436282" id="r_gab2bf2219a90e857564aae58577436282"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; M&gt; </td></tr>
 <tr class="memitem:gab2bf2219a90e857564aae58577436282 template"><td class="memItemLeft">ArrayOfRank&lt; 2 &gt; auto&#160;</td><td class="memItemRight"><a class="el" href="#gab2bf2219a90e857564aae58577436282">nda::dagger</a> (M const &amp;m)</td></tr>
 <tr class="memdesc:gab2bf2219a90e857564aae58577436282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the conjugate transpose of 2-dimensional array/view.  <br /></td></tr>
-<tr class="memitem:gae40bb4c9755fc36755dd9d3de097bb3a" id="r_gae40bb4c9755fc36755dd9d3de097bb3a"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memitem:gae40bb4c9755fc36755dd9d3de097bb3a" id="r_gae40bb4c9755fc36755dd9d3de097bb3a"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:gae40bb4c9755fc36755dd9d3de097bb3a template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gae40bb4c9755fc36755dd9d3de097bb3a">nda::exp</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gae40bb4c9755fc36755dd9d3de097bb3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function exp for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga49ef054fc157295d915b1651edb67848" id="r_ga49ef054fc157295d915b1651edb67848"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
+<tr class="memdesc:gae40bb4c9755fc36755dd9d3de097bb3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function exp for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:gaf691e7e4dcbefa90a52a018788d17fd7" id="r_gaf691e7e4dcbefa90a52a018788d17fd7"><td class="memTemplParams" colspan="2"><a id="gaf691e7e4dcbefa90a52a018788d17fd7" name="gaf691e7e4dcbefa90a52a018788d17fd7"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:gaf691e7e4dcbefa90a52a018788d17fd7 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::exp</b> (S s)</td></tr>
+<tr class="memdesc:gaf691e7e4dcbefa90a52a018788d17fd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function exp for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::exp</span>). <br /></td></tr>
+<tr class="memitem:ga49ef054fc157295d915b1651edb67848" id="r_ga49ef054fc157295d915b1651edb67848"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga49ef054fc157295d915b1651edb67848 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga49ef054fc157295d915b1651edb67848">nda::floor</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga49ef054fc157295d915b1651edb67848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function floor for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga49ef054fc157295d915b1651edb67848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function floor for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga89659050f27c5653243ae63aa00d058b" id="r_ga89659050f27c5653243ae63aa00d058b"><td class="memTemplParams" colspan="2"><a id="ga89659050f27c5653243ae63aa00d058b" name="ga89659050f27c5653243ae63aa00d058b"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga89659050f27c5653243ae63aa00d058b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::floor</b> (S s)</td></tr>
+<tr class="memdesc:ga89659050f27c5653243ae63aa00d058b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function floor for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::floor</span>). <br /></td></tr>
 <tr class="memitem:gac86b6ca466789b16e63268f8892c42a8" id="r_gac86b6ca466789b16e63268f8892c42a8"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; A&gt; </td></tr>
 <tr class="memitem:gac86b6ca466789b16e63268f8892c42a8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gac86b6ca466789b16e63268f8892c42a8">nda::frobenius_norm</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:gac86b6ca466789b16e63268f8892c42a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Frobenius norm of a 2-dimensional array.  <br /></td></tr>
 <tr class="memitem:gaa337f00c9324d22f827b9759adb22f18" id="r_gaa337f00c9324d22f827b9759adb22f18"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:gaa337f00c9324d22f827b9759adb22f18 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gaa337f00c9324d22f827b9759adb22f18">nda::imag</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:gaa337f00c9324d22f827b9759adb22f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function imag for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:gaa79c8329c178c50f2eb1e3ff129750e6" id="r_gaa79c8329c178c50f2eb1e3ff129750e6"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
-<tr class="memitem:gaa79c8329c178c50f2eb1e3ff129750e6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gaa79c8329c178c50f2eb1e3ff129750e6">nda::isnan</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gaa79c8329c178c50f2eb1e3ff129750e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function isnan for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga2e2be1e44930b308c3b366ae5a3a5e38" id="r_ga2e2be1e44930b308c3b366ae5a3a5e38"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memitem:ga4a1918ed365d7d4982d01b7a58dbf1ce" id="r_ga4a1918ed365d7d4982d01b7a58dbf1ce"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
+requires (Array&lt;A&gt; || <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga4a1918ed365d7d4982d01b7a58dbf1ce template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga4a1918ed365d7d4982d01b7a58dbf1ce">nda::isnan</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga4a1918ed365d7d4982d01b7a58dbf1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function isnan for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and complex <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memitem:ga39069a6a20ffbe746f8d4b2bfa5232c2" id="r_ga39069a6a20ffbe746f8d4b2bfa5232c2"><td class="memTemplParams" colspan="2"><a id="ga39069a6a20ffbe746f8d4b2bfa5232c2" name="ga39069a6a20ffbe746f8d4b2bfa5232c2"></a>
+template&lt;Scalar S&gt; <br />
+requires (not <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;S&gt;)</td></tr>
+<tr class="memitem:ga39069a6a20ffbe746f8d4b2bfa5232c2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::isnan</b> (S s)</td></tr>
+<tr class="memdesc:ga39069a6a20ffbe746f8d4b2bfa5232c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function isnan for real <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::isnan</span>). <br /></td></tr>
+<tr class="memitem:ga2e2be1e44930b308c3b366ae5a3a5e38" id="r_ga2e2be1e44930b308c3b366ae5a3a5e38"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga2e2be1e44930b308c3b366ae5a3a5e38 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga2e2be1e44930b308c3b366ae5a3a5e38">nda::log</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga2e2be1e44930b308c3b366ae5a3a5e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function log for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga2e2be1e44930b308c3b366ae5a3a5e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function log for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:gaf295b6bf7581e16af9988349ba7cc299" id="r_gaf295b6bf7581e16af9988349ba7cc299"><td class="memTemplParams" colspan="2"><a id="gaf295b6bf7581e16af9988349ba7cc299" name="gaf295b6bf7581e16af9988349ba7cc299"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:gaf295b6bf7581e16af9988349ba7cc299 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::log</b> (S s)</td></tr>
+<tr class="memdesc:gaf295b6bf7581e16af9988349ba7cc299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function log for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::log</span>). <br /></td></tr>
 <tr class="memitem:gaf8151ad99c4fe345cf168a5d01529a6a" id="r_gaf8151ad99c4fe345cf168a5d01529a6a"><td class="memTemplParams" colspan="2">template&lt;class F&gt; </td></tr>
 <tr class="memitem:gaf8151ad99c4fe345cf168a5d01529a6a template"><td class="memItemLeft"><a class="el" href="structnda_1_1mapped.html">mapped</a>&lt; F &gt;&#160;</td><td class="memItemRight"><a class="el" href="#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a> (F f)</td></tr>
 <tr class="memdesc:gaf8151ad99c4fe345cf168a5d01529a6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a lazy function call expression on arrays/views.  <br /></td></tr>
@@ -233,35 +276,59 @@ requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;
  !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</td></tr>
 <tr class="memitem:ga9e96dcd41ecefd5f0a1f514bbfe6c792 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga9e96dcd41ecefd5f0a1f514bbfe6c792">nda::min</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga9e96dcd41ecefd5f0a1f514bbfe6c792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function min for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga0b709fa1110a9315aa2cc73af28c0acf" id="r_ga0b709fa1110a9315aa2cc73af28c0acf"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A, Scalar S&gt; </td></tr>
+<tr class="memitem:ga0b709fa1110a9315aa2cc73af28c0acf" id="r_ga0b709fa1110a9315aa2cc73af28c0acf"><td class="memTemplParams" colspan="2">template&lt;Array A, Scalar S&gt; </td></tr>
 <tr class="memitem:ga0b709fa1110a9315aa2cc73af28c0acf template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a> (A &amp;&amp;a, S p)</td></tr>
-<tr class="memdesc:ga0b709fa1110a9315aa2cc73af28c0acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pow for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga0b709fa1110a9315aa2cc73af28c0acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pow for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:gaffb864438c69796ad0b4e2e8b941ded6" id="r_gaffb864438c69796ad0b4e2e8b941ded6"><td class="memTemplParams" colspan="2"><a id="gaffb864438c69796ad0b4e2e8b941ded6" name="gaffb864438c69796ad0b4e2e8b941ded6"></a>
+template&lt;Scalar S, Scalar P&gt; </td></tr>
+<tr class="memitem:gaffb864438c69796ad0b4e2e8b941ded6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::pow</b> (S s, P p)</td></tr>
+<tr class="memdesc:gaffb864438c69796ad0b4e2e8b941ded6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pow for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::pow</span>). <br /></td></tr>
 <tr class="memitem:ga801930e88ab85629067870e91ab9f97f" id="r_ga801930e88ab85629067870e91ab9f97f"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:ga801930e88ab85629067870e91ab9f97f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga801930e88ab85629067870e91ab9f97f">nda::real</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:ga801930e88ab85629067870e91ab9f97f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function real for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
 <tr class="memitem:gac5e6cabd373fe6b872c6c0d7fa9803c1" id="r_gac5e6cabd373fe6b872c6c0d7fa9803c1"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:gac5e6cabd373fe6b872c6c0d7fa9803c1 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gac5e6cabd373fe6b872c6c0d7fa9803c1">nda::reciprocal</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:gac5e6cabd373fe6b872c6c0d7fa9803c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reciprocal function for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga2d09be1cbff6c0061abb54763bf92bd1" id="r_ga2d09be1cbff6c0061abb54763bf92bd1"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memitem:ga2d09be1cbff6c0061abb54763bf92bd1" id="r_ga2d09be1cbff6c0061abb54763bf92bd1"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga2d09be1cbff6c0061abb54763bf92bd1 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga2d09be1cbff6c0061abb54763bf92bd1">nda::sin</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga2d09be1cbff6c0061abb54763bf92bd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sin for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga21c5e4556eb2021a54d554fdff1fa157" id="r_ga21c5e4556eb2021a54d554fdff1fa157"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:ga2d09be1cbff6c0061abb54763bf92bd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sin for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga57d185cc53c2f5f3e3a51589d390dde1" id="r_ga57d185cc53c2f5f3e3a51589d390dde1"><td class="memTemplParams" colspan="2"><a id="ga57d185cc53c2f5f3e3a51589d390dde1" name="ga57d185cc53c2f5f3e3a51589d390dde1"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga57d185cc53c2f5f3e3a51589d390dde1 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::sin</b> (S s)</td></tr>
+<tr class="memdesc:ga57d185cc53c2f5f3e3a51589d390dde1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sin for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::sin</span>). <br /></td></tr>
+<tr class="memitem:ga21c5e4556eb2021a54d554fdff1fa157" id="r_ga21c5e4556eb2021a54d554fdff1fa157"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga21c5e4556eb2021a54d554fdff1fa157 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga21c5e4556eb2021a54d554fdff1fa157">nda::sinh</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga21c5e4556eb2021a54d554fdff1fa157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sinh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga8ede76fb606ca03a323a98353b80c76b" id="r_ga8ede76fb606ca03a323a98353b80c76b"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:ga21c5e4556eb2021a54d554fdff1fa157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sinh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga0548ecd78840351c4678a6eb8df13e1f" id="r_ga0548ecd78840351c4678a6eb8df13e1f"><td class="memTemplParams" colspan="2"><a id="ga0548ecd78840351c4678a6eb8df13e1f" name="ga0548ecd78840351c4678a6eb8df13e1f"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga0548ecd78840351c4678a6eb8df13e1f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::sinh</b> (S s)</td></tr>
+<tr class="memdesc:ga0548ecd78840351c4678a6eb8df13e1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sinh for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::sinh</span>). <br /></td></tr>
+<tr class="memitem:ga8ede76fb606ca03a323a98353b80c76b" id="r_ga8ede76fb606ca03a323a98353b80c76b"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga8ede76fb606ca03a323a98353b80c76b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga8ede76fb606ca03a323a98353b80c76b">nda::sqrt</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga8ede76fb606ca03a323a98353b80c76b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sqrt for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga587ee662f319d655921a44c3dd940380" id="r_ga587ee662f319d655921a44c3dd940380"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:ga8ede76fb606ca03a323a98353b80c76b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sqrt for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:gaffc9a0cd9e5cd8a89e4c019031b0f9b2" id="r_gaffc9a0cd9e5cd8a89e4c019031b0f9b2"><td class="memTemplParams" colspan="2"><a id="gaffc9a0cd9e5cd8a89e4c019031b0f9b2" name="gaffc9a0cd9e5cd8a89e4c019031b0f9b2"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:gaffc9a0cd9e5cd8a89e4c019031b0f9b2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::sqrt</b> (S s)</td></tr>
+<tr class="memdesc:gaffc9a0cd9e5cd8a89e4c019031b0f9b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function sqrt for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::sqrt</span>). <br /></td></tr>
+<tr class="memitem:ga587ee662f319d655921a44c3dd940380" id="r_ga587ee662f319d655921a44c3dd940380"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga587ee662f319d655921a44c3dd940380 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga587ee662f319d655921a44c3dd940380">nda::tan</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga587ee662f319d655921a44c3dd940380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tan for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
-<tr class="memitem:ga247a941e48673777e3f81bd6511a5069" id="r_ga247a941e48673777e3f81bd6511a5069"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; <br />
+<tr class="memdesc:ga587ee662f319d655921a44c3dd940380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tan for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga9626290fe4eeb1c1e5754373095c0da0" id="r_ga9626290fe4eeb1c1e5754373095c0da0"><td class="memTemplParams" colspan="2"><a id="ga9626290fe4eeb1c1e5754373095c0da0" name="ga9626290fe4eeb1c1e5754373095c0da0"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga9626290fe4eeb1c1e5754373095c0da0 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::tan</b> (S s)</td></tr>
+<tr class="memdesc:ga9626290fe4eeb1c1e5754373095c0da0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tan for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::tan</span>). <br /></td></tr>
+<tr class="memitem:ga247a941e48673777e3f81bd6511a5069" id="r_ga247a941e48673777e3f81bd6511a5069"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</td></tr>
 <tr class="memitem:ga247a941e48673777e3f81bd6511a5069 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga247a941e48673777e3f81bd6511a5069">nda::tanh</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga247a941e48673777e3f81bd6511a5069"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tanh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memdesc:ga247a941e48673777e3f81bd6511a5069"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tanh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise).  <br /></td></tr>
+<tr class="memitem:ga559867f2b852a2731075de04c491867a" id="r_ga559867f2b852a2731075de04c491867a"><td class="memTemplParams" colspan="2"><a id="ga559867f2b852a2731075de04c491867a" name="ga559867f2b852a2731075de04c491867a"></a>
+template&lt;Scalar S&gt; </td></tr>
+<tr class="memitem:ga559867f2b852a2731075de04c491867a template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::tanh</b> (S s)</td></tr>
+<tr class="memdesc:ga559867f2b852a2731075de04c491867a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function tanh for <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (uses <span class="tt">std::tanh</span>). <br /></td></tr>
 <tr class="memitem:ga02d439ad1a5a02cedfe5face4cb66a1b" id="r_ga02d439ad1a5a02cedfe5face4cb66a1b"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; M&gt; </td></tr>
 <tr class="memitem:ga02d439ad1a5a02cedfe5face4cb66a1b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga02d439ad1a5a02cedfe5face4cb66a1b">nda::trace</a> (M const &amp;m)</td></tr>
 <tr class="memdesc:ga02d439ad1a5a02cedfe5face4cb66a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the trace of a 2-dimensional square array/view.  <br /></td></tr>
@@ -273,7 +340,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; </div>
+template&lt;Array A&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::abs </td>
@@ -286,22 +353,22 @@ template&lt;ArrayOrScalar A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function abs for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function abs for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::abs</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00176">176</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00194">194</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -339,7 +406,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">nda::detail::abs2</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00229">229</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00244">244</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -349,7 +416,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -363,22 +430,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function acos for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function acos for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::acos</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00349">349</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00417">417</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -388,7 +455,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -402,22 +469,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function asin for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function asin for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::asin</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00363">363</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00436">436</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -427,7 +494,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -441,22 +508,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function atan for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function atan for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::atan</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00377">377</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00455">455</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -494,7 +561,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> and complex valued), the forwarded input object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> and not complex valued) or the complex conjugate of the scalar input. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00101">101</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00112">112</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,7 +571,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -518,22 +585,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function cos for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function cos for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::cos</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00265">265</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00303">303</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -543,7 +610,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -557,22 +624,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function cosh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function cosh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::cosh</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00307">307</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00360">360</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -621,7 +688,7 @@ template&lt;ArrayOfRank&lt; 2 &gt; M&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -635,22 +702,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function exp for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function exp for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::exp</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00251">251</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00284">284</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -660,7 +727,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; </div>
+template&lt;Array A&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::floor </td>
@@ -673,22 +740,22 @@ template&lt;ArrayOrScalar A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function floor for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function floor for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::floor</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00204">204</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00224">224</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -765,17 +832,18 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::imag</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00190">190</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00204">204</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gaa79c8329c178c50f2eb1e3ff129750e6" name="gaa79c8329c178c50f2eb1e3ff129750e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa79c8329c178c50f2eb1e3ff129750e6">&#9670;&#160;</a></span>isnan()</h2>
+<a id="ga4a1918ed365d7d4982d01b7a58dbf1ce" name="ga4a1918ed365d7d4982d01b7a58dbf1ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4a1918ed365d7d4982d01b7a58dbf1ce">&#9670;&#160;</a></span>isnan()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; </div>
+template&lt;typename A&gt; <br />
+requires (Array&lt;A&gt; || <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;A&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::isnan </td>
@@ -788,22 +856,23 @@ template&lt;ArrayOrScalar A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function isnan for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function isnan for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and complex <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>A complex scalar is NaN if either component is NaN.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type.. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> or complex <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> or complex <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">nda::detail::isnan</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">nda::detail::isnan</span> applied to the object (complex <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00240">240</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00267">267</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +882,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -827,22 +896,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function log for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function log for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::log</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00391">391</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00474">474</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -935,7 +1004,7 @@ requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::max</span> applied to the inputs (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00144">144</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00155">155</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -989,7 +1058,7 @@ requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::min</span> applied to the inputs (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00163">163</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00174">174</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -999,7 +1068,7 @@ requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A, Scalar S&gt; </div>
+template&lt;Array A, Scalar S&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::pow </td>
@@ -1016,24 +1085,24 @@ template&lt;ArrayOrScalar A, Scalar S&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function pow for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function pow for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
     <tr><td class="paramname">S</td><td><a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> exponent type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
     <tr><td class="paramname">p</td><td>Exponent value. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::pow</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00084">84</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00098">98</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1140,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">nda::detail::real</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00218">218</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00234">234</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1178,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of \( 1.0 / x \) applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00117">117</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00128">128</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1119,7 +1188,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -1133,22 +1202,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function sin for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function sin for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::sin</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00279">279</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00322">322</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1158,7 +1227,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -1172,22 +1241,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function sinh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function sinh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::sinh</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00321">321</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00379">379</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1266,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -1211,22 +1280,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function sqrt for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function sqrt for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::sqrt</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00405">405</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00493">493</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1236,7 +1305,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -1250,22 +1319,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function tan for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function tan for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::tan</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00293">293</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00341">341</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1275,7 +1344,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A&gt; <br />
+template&lt;Array A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; != 'M')</div>
       <table class="memname">
         <tr>
@@ -1289,22 +1358,22 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
 
-<p>Function tanh for non-matrix <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<p>Function tanh for non-matrix <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types (lazy and coefficient-wise). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::tanh</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00335">335</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00398">398</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>

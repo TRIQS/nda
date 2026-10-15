@@ -360,18 +360,18 @@ Performing arithmetic operations</h1>
 Applying mathematical functions and algorithms</h1>
 <p>Similar to arithmetic operations, most of the <a class="el" href="group__av__math.html" title="Mathematical functions">Mathematical functions</a> that can operate on arrays and views return a lazy function call expression (<a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a>) and are sensitive to their algebras:</p>
 <div class="fragment"><div class="line"><span class="comment">// element-wise square</span></div>
-<div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq = <a class="code hl_function" href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a>(C, 2);</div>
+<div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq = <a class="code hl_function" href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a>(C, 2);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;C^2 =&quot;</span> &lt;&lt; C_sq &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// element-wise square root</span></div>
-<div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq_sqrt = <a class="code hl_function" href="group__av__math.html#ga8ede76fb606ca03a323a98353b80c76b">nda::sqrt</a>(C_sq);</div>
+<div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq_sqrt = <a class="code hl_function" href="group__av__math.html#gaffc9a0cd9e5cd8a89e4c019031b0f9b2">nda::sqrt</a>(C_sq);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;sqrt(C^2) =&quot;</span> &lt;&lt; C_sq_sqrt &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// trace of a matrix</span></div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;trace(M1) = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__av__math.html#ga02d439ad1a5a02cedfe5face4cb66a1b">nda::trace</a>(M1) &lt;&lt; std::endl;</div>
 <div class="ttc" id="agroup__av__math_html_ga02d439ad1a5a02cedfe5face4cb66a1b"><div class="ttname"><a href="group__av__math.html#ga02d439ad1a5a02cedfe5face4cb66a1b">nda::trace</a></div><div class="ttdeci">auto trace(M const &amp;m)</div><div class="ttdoc">Get the trace of a 2-dimensional square array/view.</div><div class="ttdef"><b>Definition</b> <a href="matrix__functions_8hpp_source.html#l00060">matrix_functions.hpp:60</a></div></div>
-<div class="ttc" id="agroup__av__math_html_ga0b709fa1110a9315aa2cc73af28c0acf"><div class="ttname"><a href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, S p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00084">mapped_functions.hpp:84</a></div></div>
-<div class="ttc" id="agroup__av__math_html_ga8ede76fb606ca03a323a98353b80c76b"><div class="ttname"><a href="group__av__math.html#ga8ede76fb606ca03a323a98353b80c76b">nda::sqrt</a></div><div class="ttdeci">auto sqrt(A &amp;&amp;a)</div><div class="ttdoc">Function sqrt for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types...</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00405">mapped_functions.hpp:405</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gaffb864438c69796ad0b4e2e8b941ded6"><div class="ttname"><a href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a></div><div class="ttdeci">auto pow(S s, P p)</div><div class="ttdoc">Function pow for nda::Scalar types (uses std::pow).</div></div>
+<div class="ttc" id="agroup__av__math_html_gaffc9a0cd9e5cd8a89e4c019031b0f9b2"><div class="ttname"><a href="group__av__math.html#gaffc9a0cd9e5cd8a89e4c019031b0f9b2">nda::sqrt</a></div><div class="ttdeci">auto sqrt(S s)</div><div class="ttdoc">Function sqrt for nda::Scalar types (uses std::sqrt).</div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">C^2 =</div>
 <div class="line">[[1,4]</div>
@@ -596,11 +596,11 @@ Full source</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;M1 * M2 =&quot;</span> &lt;&lt; <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;int&gt;</a>(M1 * M2) &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// element-wise square</span></div>
-<div class="line">  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq = <a class="code hl_function" href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a>(C, 2);</div>
+<div class="line">  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq = <a class="code hl_function" href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a>(C, 2);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;C^2 =&quot;</span> &lt;&lt; C_sq &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// element-wise square root</span></div>
-<div class="line">  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq_sqrt = <a class="code hl_function" href="group__av__math.html#ga8ede76fb606ca03a323a98353b80c76b">nda::sqrt</a>(C_sq);</div>
+<div class="line">  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq_sqrt = <a class="code hl_function" href="group__av__math.html#gaffc9a0cd9e5cd8a89e4c019031b0f9b2">nda::sqrt</a>(C_sq);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;sqrt(C^2) =&quot;</span> &lt;&lt; C_sq_sqrt &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// trace of a matrix</span></div>

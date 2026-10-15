@@ -17,7 +17,7 @@ var searchData=
   ['policies_14',['policies',['../group__layout__pols.html',1,'Layout policies'],['../group__mem__pols.html',1,'Memory policies']]],
   ['policies_2ehpp_15',['policies.hpp',['../layout_2policies_8hpp.html',1,'(Global Namespace)'],['../mem_2policies_8hpp.html',1,'(Global Namespace)']]],
   ['pop_16',['pop',['../group__utils__std.html#ga372f86a44ea753a1845c8f056c7a2a2b',1,'nda::stdutil']]],
-  ['pow_17',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf',1,'nda::pow()']]],
+  ['pow_17',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6',1,'nda::pow(S s, P p)'],['../group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf',1,'nda::pow(A &amp;&amp;a, S p)']]],
   ['prefetch_18',['prefetch',['../group__mem__utils.html#gab4ee83e0eb8fea2e817f15861f09519d',1,'nda::mem']]],
   ['prefetch_2ehpp_19',['prefetch.hpp',['../prefetch_8hpp.html',1,'']]],
   ['prerequisite_3a_20building_20with_20tblis_20support_20',['Prerequisite: building with TBLIS support',['../ex9.html#ex9_p2',1,'']]],

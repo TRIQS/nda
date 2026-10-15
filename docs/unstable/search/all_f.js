@@ -50,7 +50,7 @@ var searchData=
   ['exceptions_2ehpp_47',['exceptions.hpp',['../exceptions_8hpp.html',1,'']]],
   ['existing_20arrays_20views_48',['Using existing arrays/views',['../ex6.html#ex6_p5',1,'']]],
   ['existing_20dataset_49',['existing dataset',['../ex5.html#ex5_p4',1,'Reading a slice from an existing dataset'],['../ex5.html#ex5_p3',1,'Writing to a slice of an existing dataset']]],
-  ['exp_50',['exp',['../group__clef__expr.html#ga82bbfd6d447aaff10a6db403d330995f',1,'nda::clef::exp()'],['../group__av__math.html#gae40bb4c9755fc36755dd9d3de097bb3a',1,'nda::exp()']]],
+  ['exp_50',['exp',['../group__clef__expr.html#ga82bbfd6d447aaff10a6db403d330995f',1,'nda::clef::exp()'],['../group__av__math.html#gaf691e7e4dcbefa90a52a018788d17fd7',1,'nda::exp(S s)'],['../group__av__math.html#gae40bb4c9755fc36755dd9d3de097bb3a',1,'nda::exp(A &amp;&amp;a)']]],
   ['expect_5farray_5feq_51',['EXPECT_ARRAY_EQ',['../group__testing.html#gad8ecf010e01059f30570b7797382dc66',1,'gtest_tools.hpp']]],
   ['expect_5farray_5fnear_52',['EXPECT_ARRAY_NEAR',['../group__testing.html#ga350f0bafc5dd3ec08c1628a2ac900929',1,'gtest_tools.hpp']]],
   ['expect_5farray_5frel_5fnear_53',['EXPECT_ARRAY_REL_NEAR',['../group__testing.html#ga737a9b0efc5dd3c377c6021f02cd8264',1,'gtest_tools.hpp']]],

@@ -329,7 +329,7 @@ Copy/Move operations</h1>
 Operating on views/slices</h1>
 <p>We can perform various arithmetic operations, mathematical functions and algorithms with views and slices just like we did with arrays in <a class="el" href="ex1.html#ex1_p8" title="Performing arithmetic operations">Performing arithmetic operations</a> and <a class="el" href="ex1.html#ex1_p9" title="Applying mathematical functions and algorithms">Applying mathematical functions and algorithms</a>.</p>
 <div class="fragment"><div class="line"><span class="comment">// arithmetic operations and math functions</span></div>
-<div class="line">C_v = S_3 * 2 + <a class="code hl_function" href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a>(S_3, 2);</div>
+<div class="line">C_v = S_3 * 2 + <a class="code hl_function" href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a>(S_3, 2);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;C = &quot;</span> &lt;&lt; C &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// algorithms</span></div>
@@ -339,7 +339,7 @@ Operating on views/slices</h1>
 <div class="ttc" id="agroup__av__algs_html_ga0d54b733a7c15c15846de86a79d53025"><div class="ttname"><a href="group__av__algs.html#ga0d54b733a7c15c15846de86a79d53025">nda::max_element</a></div><div class="ttdeci">auto max_element(A const &amp;a)</div><div class="ttdoc">Find the maximum element of an array.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00126">algorithms.hpp:126</a></div></div>
 <div class="ttc" id="agroup__av__algs_html_ga32b50e2bafb182294179bb1f2f0f5c9b"><div class="ttname"><a href="group__av__algs.html#ga32b50e2bafb182294179bb1f2f0f5c9b">nda::sum</a></div><div class="ttdeci">auto sum(A const &amp;a)</div><div class="ttdoc">Sum all the elements of an nda::Array object.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00162">algorithms.hpp:162</a></div></div>
 <div class="ttc" id="agroup__av__algs_html_ga8dcf3b8eb2cf5460c47e825b4ec38534"><div class="ttname"><a href="group__av__algs.html#ga8dcf3b8eb2cf5460c47e825b4ec38534">nda::min_element</a></div><div class="ttdeci">auto min_element(A const &amp;a)</div><div class="ttdoc">Find the minimum element of an array.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00145">algorithms.hpp:145</a></div></div>
-<div class="ttc" id="agroup__av__math_html_ga0b709fa1110a9315aa2cc73af28c0acf"><div class="ttname"><a href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, S p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00084">mapped_functions.hpp:84</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gaffb864438c69796ad0b4e2e8b941ded6"><div class="ttname"><a href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a></div><div class="ttdeci">auto pow(S s, P p)</div><div class="ttdoc">Function pow for nda::Scalar types (uses std::pow).</div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">C =</div>
 <div class="line">[[0,8,24]</div>
@@ -519,7 +519,7 @@ Full source</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;C = &quot;</span> &lt;&lt; C &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// arithmetic operations and math functions</span></div>
-<div class="line">  C_v = S_3 * 2 + <a class="code hl_function" href="group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf">nda::pow</a>(S_3, 2);</div>
+<div class="line">  C_v = S_3 * 2 + <a class="code hl_function" href="group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6">nda::pow</a>(S_3, 2);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;C = &quot;</span> &lt;&lt; C &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// algorithms</span></div>

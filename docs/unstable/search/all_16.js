@@ -38,7 +38,7 @@ var searchData=
   ['linear_20algebra_20with_20arrays_35',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
   ['list_36',['Deprecated List',['../deprecated.html',1,'']]],
   ['literals_2ehpp_37',['literals.hpp',['../literals_8hpp.html',1,'']]],
-  ['log_38',['log',['../group__clef__expr.html#ga42cef35bdcbbc38ae0a5cf0fbe546200',1,'nda::clef::log()'],['../group__av__math.html#ga2e2be1e44930b308c3b366ae5a3a5e38',1,'nda::log()']]],
+  ['log_38',['log',['../group__clef__expr.html#ga42cef35bdcbbc38ae0a5cf0fbe546200',1,'nda::clef::log()'],['../group__av__math.html#gaf295b6bf7581e16af9988349ba7cc299',1,'nda::log(S s)'],['../group__av__math.html#ga2e2be1e44930b308c3b366ae5a3a5e38',1,'nda::log(A &amp;&amp;a)']]],
   ['loginot_39',['loginot',['../structnda_1_1clef_1_1tags_1_1loginot.html',1,'nda::clef::tags']]],
   ['lu_40',['lu',['../group__linalg__decompositions.html#gaa8a1eabc2832c7f5a1076a66b906a5b2',1,'nda::linalg']]],
   ['lu_2ehpp_41',['lu.hpp',['../lu_8hpp.html',1,'']]],

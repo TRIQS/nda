@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['tan_0',['tan',['../group__clef__expr.html#ga418bc0bc645a4e7382c0760f3d0311e8',1,'nda::clef::tan()'],['../group__av__math.html#ga587ee662f319d655921a44c3dd940380',1,'nda::tan()']]],
-  ['tanh_1',['tanh',['../group__clef__expr.html#gac3b1f4196f2f191626a620ba86e48ce4',1,'nda::clef::tanh()'],['../group__av__math.html#ga247a941e48673777e3f81bd6511a5069',1,'nda::tanh()']]],
+  ['tan_0',['tan',['../group__clef__expr.html#ga418bc0bc645a4e7382c0760f3d0311e8',1,'nda::clef::tan()'],['../group__av__math.html#ga9626290fe4eeb1c1e5754373095c0da0',1,'nda::tan(S s)'],['../group__av__math.html#ga587ee662f319d655921a44c3dd940380',1,'nda::tan(A &amp;&amp;a)']]],
+  ['tanh_1',['tanh',['../group__clef__expr.html#gac3b1f4196f2f191626a620ba86e48ce4',1,'nda::clef::tanh()'],['../group__av__math.html#ga559867f2b852a2731075de04c491867a',1,'nda::tanh(S s)'],['../group__av__math.html#ga247a941e48673777e3f81bd6511a5069',1,'nda::tanh(A &amp;&amp;a)']]],
   ['tensor_5fview_2',['tensor_view',['../structnda_1_1tensor_1_1tensor__view.html#a3a86c087a81d8460b1521ef0f6140cba',1,'nda::tensor::tensor_view::tensor_view()=default'],['../structnda_1_1tensor_1_1tensor__view.html#a5630157ae499466459ca65f27a962c80',1,'nda::tensor::tensor_view::tensor_view(T *p)'],['../structnda_1_1tensor_1_1tensor__view.html#ae5f0ee9c2c58ffbabc6acead1138d986',1,'nda::tensor::tensor_view::tensor_view(A &amp;&amp;a, unary_op op)'],['../structnda_1_1tensor_1_1tensor__view.html#a37a945165de6ac6ff14eb5648b444be7',1,'nda::tensor::tensor_view::tensor_view(A &amp;&amp;a)'],['../structnda_1_1tensor_1_1tensor__view.html#ac131c3b91d5a120f660a8c3dab1646c3',1,'nda::tensor::tensor_view::tensor_view(tensor_view&lt; U &gt; tv)']]],
   ['to_5fdevice_3',['to_device',['../group__av__factories.html#gab3fd89e0758c7e679209e4f7ed914ea7',1,'nda']]],
   ['to_5fhost_4',['to_host',['../group__av__factories.html#ga8764fbd90ade51ac8616beb50b6b8a62',1,'nda']]],

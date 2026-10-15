@@ -3,7 +3,7 @@ var searchData=
   ['parent_0',['parent',['../structnda_1_1mem_1_1handle__borrowed.html#a1c47ea4fa502f02dfd07ca97c6ecd119',1,'nda::mem::handle_borrowed']]],
   ['permuted_5findices_5fview_1',['permuted_indices_view',['../group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4',1,'nda']]],
   ['pop_2',['pop',['../group__utils__std.html#ga372f86a44ea753a1845c8f056c7a2a2b',1,'nda::stdutil']]],
-  ['pow_3',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf',1,'nda::pow()']]],
+  ['pow_3',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#gaffb864438c69796ad0b4e2e8b941ded6',1,'nda::pow(S s, P p)'],['../group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf',1,'nda::pow(A &amp;&amp;a, S p)']]],
   ['prefetch_4',['prefetch',['../group__mem__utils.html#gab4ee83e0eb8fea2e817f15861f09519d',1,'nda::mem']]],
   ['print_5fhistogram_5',['print_histogram',['../classnda_1_1mem_1_1stats.html#a654a54e2728583b2dc41690a4e2c827b',1,'nda::mem::stats']]],
   ['print_5ftuple_6',['print_tuple',['../group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642',1,'nda::clef']]],

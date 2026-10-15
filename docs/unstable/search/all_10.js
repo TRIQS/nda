@@ -10,7 +10,7 @@ var searchData=
   ['fixes_7',['Fixes',['../changelog.html#autotoc_md26',1,'']]],
   ['flatten_8',['flatten',['../group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042',1,'nda']]],
   ['floatordouble_9',['FloatOrDouble',['../conceptnda_1_1_float_or_double.html',1,'nda']]],
-  ['floor_10',['floor',['../group__clef__expr.html#ga0481af7c923b471e08dec84fd812e60f',1,'nda::clef::floor()'],['../group__av__math.html#ga49ef054fc157295d915b1651edb67848',1,'nda::floor(A &amp;&amp;a)']]],
+  ['floor_10',['floor',['../group__clef__expr.html#ga0481af7c923b471e08dec84fd812e60f',1,'nda::clef::floor()'],['../group__av__math.html#ga89659050f27c5653243ae63aa00d058b',1,'nda::floor(S s)'],['../group__av__math.html#ga49ef054fc157295d915b1651edb67848',1,'nda::floor(A &amp;&amp;a)']]],
   ['fold_11',['fold',['../group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e',1,'nda::fold(F f, A const &amp;a, R r)'],['../group__av__algs.html#ga66519bf80315973770c266a4d10eb054',1,'nda::fold(F f, A const &amp;a)']]],
   ['for_20matrices_20and_20vectors_12',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]],
   ['for_5feach_13',['for_each',['../group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6',1,'nda']]],
