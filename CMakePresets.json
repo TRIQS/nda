@@ -1,0 +1,18 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "benchmark_tracked",
+      "displayName": "Tracked benchmarks",
+      "description": "Every tracked benchmark build: tools/benchmarks/build-benchmarks.sh configures with this preset, and compare-benchmarks.sh configures each side of a PR comparison with its own copy (a baseline without one borrows the candidate's) and reports any difference. A revision that does not define an option ignores it.",
+      "binaryDir": "${sourceDir}/build-${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "-march=native",
+        "Build_Benchs": "ON",
+        "Build_Tests": "OFF",
+        "PythonSupport": "OFF"
+      }
+    }
+  ]
+}
