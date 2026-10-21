@@ -10,7 +10,7 @@
 
 #include "./bench_ops.hpp"
 
-using namespace nda_bench;
+using namespace nda::bench;
 
 struct op_neg : op_defaults {
   static decltype(auto) op(auto const &A) { return -A; }
@@ -19,11 +19,11 @@ struct op_add : op_defaults {
   static decltype(auto) op(auto const &A, auto const &B) { return A + B; }
 };
 struct op_mul : op_defaults {
-  static auto result_shape(auto const &A, auto const &B) { return nda_bench::product_shape(A, B); }
+  static auto result_shape(auto const &A, auto const &B) { return nda::bench::product_shape(A, B); }
   static decltype(auto) op(auto const &A, auto const &B) { return A * B; }
 };
 struct op_div : op_defaults {
-  static auto result_shape(auto const &A, auto const &B) { return nda_bench::product_shape(A, B); }
+  static auto result_shape(auto const &A, auto const &B) { return nda::bench::product_shape(A, B); }
   static decltype(auto) op(auto const &A, auto const &B) { return A / B; }
 };
 struct op_hadamard : op_defaults {
@@ -31,20 +31,20 @@ struct op_hadamard : op_defaults {
 };
 struct op_fma : op_defaults {
   static auto result_shape(auto const &A, auto const &B, auto const &C) {
-    if constexpr (nda::Scalar<std::remove_cvref_t<decltype(A)>> && nda::Scalar<std::remove_cvref_t<decltype(B)>>) {
+    if constexpr (nda::Scalar<decltype(A)> and nda::Scalar<decltype(B)>) {
       return C.shape();
     } else {
-      return nda_bench::product_shape(A, B);
+      return nda::bench::product_shape(A, B);
     }
   }
   static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A * B + C; }
 };
 struct op_fms : op_defaults {
   static auto result_shape(auto const &A, auto const &B, auto const &C) {
-    if constexpr (nda::Scalar<std::remove_cvref_t<decltype(A)>> && nda::Scalar<std::remove_cvref_t<decltype(B)>>) {
+    if constexpr (nda::Scalar<decltype(A)> and nda::Scalar<decltype(B)>) {
       return C.shape();
     } else {
-      return nda_bench::product_shape(A, B);
+      return nda::bench::product_shape(A, B);
     }
   }
   static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A * B - C; }
@@ -65,8 +65,7 @@ NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, matrix_input<>)
 NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, vector_input<>)
 NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, scalar_input<>)
 
-NDA_BENCHMARK(op_div, "div", types_double, array_input<2, 'A', nda::C_layout, signed_band>,
-              array_input<2, 'A', nda::C_layout, positive_band>)
+NDA_BENCHMARK(op_div, "div", types_double, array_input<2, 'A', nda::C_layout, -1.0, 1.0>, array_input<2>)
 NDA_BENCHMARK(op_div, "div", types_double, matrix_input<>, matrix_input<>)
 NDA_BENCHMARK(op_div, "div", types_double, matrix_input<>, scalar_input<>)
 

@@ -4,7 +4,7 @@
 // See LICENSE in the root of this distribution for details.
 
 #include "./bench_ops.hpp"
-using namespace nda_bench;
+using namespace nda::bench;
 
 struct op_no_matrix : op_defaults {
   static constexpr bool supports_matrix = false;
@@ -66,9 +66,9 @@ NDA_BENCHMARK(op_cosh, "cosh", types_double, array_input<2>)
 NDA_BENCHMARK(op_tanh, "tanh", types_double, array_input<2>)
 
 // domain is [-1,1]: the default [1,2) range would return NaN for every element
-NDA_BENCHMARK(op_asin, "asin", types_double, array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+NDA_BENCHMARK(op_asin, "asin", types_double, array_input<2, 'A', nda::C_layout, -1.0, 1.0>)
 
 // domain is [-1,1]: the default [1,2) range would return NaN for every element
-NDA_BENCHMARK(op_acos, "acos", types_double, array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+NDA_BENCHMARK(op_acos, "acos", types_double, array_input<2, 'A', nda::C_layout, -1.0, 1.0>)
 
 NDA_BENCHMARK(op_atan, "atan", types_double, array_input<2>)

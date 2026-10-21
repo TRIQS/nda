@@ -5,7 +5,7 @@
 
 #include "./bench_ops.hpp"
 
-using nda_bench::op_defaults;
+using nda::bench::op_defaults;
 
 struct op_sum : op_defaults {
   static decltype(auto) op(auto const &A, auto const &B) { return sum(A + B); }
@@ -26,14 +26,14 @@ struct op_frob_norm : op_defaults {
   static constexpr bool supports_rank3 = false;
 };
 
-using namespace nda_bench;
+using namespace nda::bench;
 
 NDA_BENCHMARK(op_sum, "sum", types_double, array_input<2>, array_input<2>)
 
 // A + B must sit at ~1.0, or the running product overflows to +inf within a few hundred
 // elements (f32 by ~128 multiplications) and the benchmark times infinity arithmetic.
-NDA_BENCHMARK(op_prod, "product", types_double, array_input<2, 'A', nda::C_layout, nda_bench::product_band>,
-              array_input<2, 'A', nda::C_layout, nda_bench::product_band>)
+using product_input = array_input<2, 'A', nda::C_layout, 0.5 - 5e-8, 0.5 + 5e-8>;
+NDA_BENCHMARK(op_prod, "product", types_double, product_input, product_input)
 
 NDA_BENCHMARK(op_max_elem, "max_element", types<double>, array_input<2>, array_input<2>)
 

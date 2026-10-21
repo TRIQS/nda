@@ -3,20 +3,16 @@
 // SPDX-License-Identifier: Apache-2.0
 // See LICENSE in the root of this distribution for details.
 
-// In-place nda::tensor ops: scalars and input bands keep repeated calls bounded.
+// In-place nda::tensor ops: scalars and input bounds keep repeated calls bounded.
 
 #include "./bench_ops.hpp"
 
-using nda_bench::op_defaults;
+using namespace nda::bench;
 using nda::tensor::binary_op;
 using nda::tensor::unary_op;
 
 template <typename A>
 using value_t = nda::get_value_t<std::remove_cvref_t<A>>;
-
-struct log_band {
-  static constexpr nda_bench::input_range value{.lower = 3.0, .upper = 6.0};
-};
 
 // a = alpha * op(a)
 template <unary_op Op, double Alpha>
@@ -73,12 +69,12 @@ using op_tri_norm_2_sum  = op_elementwise_trinary<binary_op::NORM_2, binary_op::
 using op_tri_sum_norm_2  = op_elementwise_trinary<binary_op::SUM, binary_op::NORM_2, 1.0, 1.0, 0.5>;
 using op_tri_max_sum     = op_elementwise_trinary<binary_op::MAX, binary_op::SUM, 1.0, 1.0, 0.5, false>;
 
-using namespace nda_bench;
+using namespace nda::bench;
 
 template <std::int32_t Rank>
-using log_input = array_input<Rank, 'A', nda::C_layout, log_band>;
+using log_input = array_input<Rank, 'A', nda::C_layout, 3.0, 6.0>;
 template <std::int32_t Rank>
-using product_input = array_input<Rank, 'A', nda::C_layout, product_band>;
+using product_input = array_input<Rank, 'A', nda::C_layout, 0.5 - 5e-8, 0.5 + 5e-8>;
 
 NDA_BENCHMARK(op_scale_identity, "scale_identity", types_double, array_input<2>)
 NDA_BENCHMARK(op_scale_conj, "scale_conj", types_double, array_input<2>)

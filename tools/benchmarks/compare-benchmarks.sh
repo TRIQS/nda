@@ -4,8 +4,8 @@
 #
 # Revisions come from the environment. Jenkins PR build: CHANGE_TARGET (baseline,
 # target branch tip) and CHANGE_ID (candidate, the PR head). Local: BASELINE_REF and
-# CANDIDATE_REF (default HEAD). WORKSPACE defaults to this checkout, WORKSPACE_TMP to /tmp
-# and BENCHMARK_WORKERS to 12.
+# CANDIDATE_REF (default: the checked-out branch). WORKSPACE defaults to this checkout,
+# WORKSPACE_TMP to /tmp and BENCHMARK_WORKERS to 12.
 set -eu
 # Single-threaded measurements: the workers already measure one case per core in parallel.
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 TBLIS_NUM_THREADS=1
@@ -17,8 +17,12 @@ if [ -n "${CHANGE_ID:-}" ]; then
   git fetch --quiet --no-tags origin "refs/heads/$CHANGE_TARGET"; baseline=$(git rev-parse FETCH_HEAD)
   git fetch --quiet --no-tags origin "refs/pull/$CHANGE_ID/head"; candidate=$(git rev-parse FETCH_HEAD)
 else
+  # compare.py names each side by its ref in the report and charts; "HEAD" says nothing, the branch does.
+  if [ "${CANDIDATE_REF:-HEAD}" = HEAD ]; then
+    export CANDIDATE_REF="$(git rev-parse --abbrev-ref HEAD)"
+  fi
   baseline=$(git rev-parse --verify "${BASELINE_REF:?Set BASELINE_REF}^{commit}")
-  candidate=$(git rev-parse --verify "${CANDIDATE_REF:-HEAD}^{commit}")
+  candidate=$(git rev-parse --verify "$CANDIDATE_REF^{commit}")
 fi
 echo "baseline  $baseline"
 echo "candidate $candidate"
@@ -38,7 +42,7 @@ checkout baseline "$baseline"
 
 # Each side resolves its own dependencies from its own deps/CMakeLists.txt, so a PR that
 # changes a pin is measured with that change. The two sides' dependency commits are
-# recorded in metadata.json and may differ.
+# recorded in comparison.json and may differ.
 for side in candidate baseline; do
   sh "$WORKSPACE/tools/benchmarks/build-benchmarks.sh" "$root/$side-source" "$root/$side-build"
 done

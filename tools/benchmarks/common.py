@@ -1,6 +1,4 @@
-"""Google Benchmark discovery, execution, case names, and timing units."""
-
-from __future__ import annotations
+"""Running Google Benchmark binaries pinned to CPUs, and reading case names."""
 
 from datetime import datetime, timezone
 import json
@@ -8,12 +6,14 @@ import os
 import re
 import shlex
 import subprocess
-import tempfile
 import threading
-import time
 from pathlib import Path
 
+MIN_TIME = '0.2s'      # each launch times its case for at least this long
+MIN_WARMUP_TIME = 0.1  # seconds of warm-up each launch runs and discards first
 NANOSECONDS = {"ns": 1, "us": 1000, "ms": 1_000_000, "s": 1_000_000_000}
+NS_PER_US = NANOSECONDS["us"]
+SHORT_SHA = 10         # hex digits of a commit hash shown in logs, reports and chart titles
 
 
 def timestamp():
@@ -21,25 +21,45 @@ def timestamp():
 
 
 def write_json(path, value):
-    temporary = path.with_suffix('.tmp')
-    temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
-    temporary.replace(path)
+    path.write_text(json.dumps(value, indent=2) + '\n')
+
+
+def run(command, **kw):
+    """The stripped standard output of command; raises subprocess.CalledProcessError when it fails."""
+    return subprocess.run(command, capture_output=True, text=True, check=True, **kw).stdout.strip()
 
 
 def find_binaries(bindir):
     return sorted(path for path in bindir.glob("*") if path.is_file() and os.access(path, os.X_OK))
 
 
-def list_cases(binary, pattern=None):
-    command = [str(binary), "--benchmark_list_tests=true"]
-    if pattern:
-        command.append(f"--benchmark_filter={pattern}")
-    output = subprocess.run(command, capture_output=True, text=True, check=True)
-    return [name.strip() for name in output.stdout.splitlines() if name.strip()]
+def discover_cases(bindir, pattern=None):
+    """{(binary name, case name): binary} for every case of every benchmark binary in bindir."""
+    cases = {}
+    for binary in find_binaries(bindir):
+        command = [str(binary), "--benchmark_list_tests=true"]
+        if pattern:
+            command.append(f"--benchmark_filter={pattern}")
+        cases.update({(binary.name, name.strip()): binary for name in run(command).splitlines() if name.strip()})
+    return cases
+
+
+def worker_cpus(count=None, *, pin=True):
+    """Select workers on distinct allowed physical cores, or return None entries for unpinned workers."""
+    if not pin:
+        return [None] * (count or len(os.sched_getaffinity(0)))
+    cpus, cores = [], set()
+    for cpu in sorted(os.sched_getaffinity(0)):
+        core = Path(f"/sys/devices/system/cpu/cpu{cpu}/topology/thread_siblings_list").read_text()
+        if core not in cores:
+            cores.add(core)
+            cpus.append(cpu)
+    return cpus[:count]
 
 
 def output_logger(path):
-    """Append complete invocation sections without interleaving parallel workers."""
+    """A function that appends one labelled section to path (emptied first); safe to call from parallel workers."""
+    path.write_text('')
     lock = threading.Lock()
 
     def append(label, text):
@@ -49,63 +69,33 @@ def output_logger(path):
     return append
 
 
-def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, log_output, log_label):
-    """Keep measurements in JSON and append console diagnostics to output.log."""
-    with tempfile.TemporaryDirectory(prefix='nda-benchmark-') as temporary:
-        output = Path(temporary) / 'result.json'
-        log = Path(temporary) / 'output.log'
-        command = [*prefix, str(binary), f'--benchmark_out={output}', '--benchmark_out_format=json',
-                   f'--benchmark_repetitions={repetitions}', f'--benchmark_min_time={min_time}',
-                   f'--benchmark_min_warmup_time={min_warmup_time:g}', f'--benchmark_filter={pattern}']
-        result = {'started_at': timestamp()}
-        start = time.monotonic()
-        try:
-            with log.open('wb') as stream:
-                process = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT)
-            result['exit_code'] = process.returncode
-            if process.returncode:
-                raise ValueError(f'Process exited with {process.returncode}; see output.log')
-            benchmark = json.loads(output.read_text())
-            if failed := [row for row in benchmark['benchmarks'] if row.get('error_occurred')]:
-                raise ValueError(f'Benchmark reported an error: {failed[0]}')
-            result['benchmark'] = benchmark
-        except (OSError, ValueError) as exc:
-            result['error'] = str(exc)
-        result.update(finished_at=timestamp(), wall_seconds=time.monotonic() - start)
-        diagnostics = log.read_text(errors='replace')
-        if result.get('error'):
-            diagnostics += '\nError: ' + result['error']
-        log_output(log_label, f"Command: {shlex.join(command)}\nStarted: {result['started_at']}\n"
-                   f"Finished: {result['finished_at']}\n{diagnostics}")
-        return result
+def measure(binary, name, cpu, log, label):
+    """Launch binary to run the case name alone, pinned to cpu (None: unpinned), and return its CPU time per
+    iteration in ns. The command and its console output go to log under label; a failed launch raises RuntimeError."""
+    pin = [] if cpu is None else ['numactl', f'--physcpubind={cpu}', '--localalloc']
+    command = [*pin, str(binary), f'--benchmark_filter=^{re.escape(name)}$', f'--benchmark_min_time={MIN_TIME}',
+               f'--benchmark_min_warmup_time={MIN_WARMUP_TIME:g}', '--benchmark_format=json']
+    process = subprocess.run(command, capture_output=True, text=True, errors='replace')
+    log(f'{binary.name}: {name}: {label}', f'Command: {shlex.join(command)}\n{process.stderr}{process.stdout}')
+    if process.returncode:
+        raise RuntimeError(f'{binary.name} {name} exited with {process.returncode}; see output.log')
+    row = json.loads(process.stdout)['benchmarks'][0]
+    if row.get('error_occurred'):
+        raise RuntimeError(f'{binary.name} {name} reported an error: {row.get("error_message")}')
+    return row['cpu_time'] * NANOSECONDS[row['time_unit']]
 
 
-def measure(binary, name, prefix, label, min_time, min_warmup_time, repetitions, log_output):
-    """One launch of one case: execute() with the name as an anchored filter, plus 'cpu_time_ns', the minimum
-    CPU time per iteration over the launch's repetitions, when the launch succeeded."""
-    result = execute(
-        binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, min_warmup_time=min_warmup_time,
-        log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
-    if 'benchmark' in result:
-        result['cpu_time_ns'] = min(row['cpu_time'] * NANOSECONDS[row['time_unit']]
-                                    for row in result['benchmark']['benchmarks'] if row['run_type'] == 'iteration')
-    return result
-
-
-# The C++ type behind each value-type tag of nda_bench::type_tag (benchmarks/tracked/bench_inputs.hpp). The order is
-# the one reports and charts use; a tag missing here still works, shown under its tag after the listed ones.
+# The C++ type behind each value-type tag of nda::bench::type_tag (benchmarks/tracked/bench_inputs.hpp), in the order
+# reports and charts use.
 VALUE_TYPES = {'f64': 'double', 'c128': 'complex<double>', 'f32': 'float', 'c64': 'complex<float>'}
 
 
 def value_type_label(tag):
-    """'double (f64)' for a listed tag, the tag itself otherwise."""
-    return f'{VALUE_TYPES[tag]} ({tag})' if tag in VALUE_TYPES else tag
+    return f'{VALUE_TYPES[tag]} ({tag})'
 
 
 def value_type_key(tag):
-    """Sort key: the order of VALUE_TYPES, then unlisted tags alphabetically."""
-    return (list(VALUE_TYPES).index(tag), '') if tag in VALUE_TYPES else (len(VALUE_TYPES), tag)
+    return list(VALUE_TYPES).index(tag)
 
 
 def case_factors(suite, name):
@@ -125,20 +115,8 @@ def case_factors(suite, name):
     }
 
 
-def case_counts(names):
-    """Collapse names such as f64/A2_C_layout,A2_C_layout/add/64 by removing /<N>."""
-    families = {re.sub(r"/\d+$", "", name) for name in names}
-    ops = {family.rsplit("/", 1)[-1] for family in families}
-    return len(names), len(families), len(ops)
-
-
-def discover_cases(bindir, pattern=None):
-    # Google Benchmark accepts a name registered twice and runs both under one ^name$ filter.
-    cases = {}
-    for binary in find_binaries(bindir):
-        for name in list_cases(binary, pattern):
-            key = (binary.name, name)
-            if key in cases:
-                raise ValueError(f'Duplicate benchmark identity: {key}')
-            cases[key] = binary
-    return cases
+def side_label(results, side, commit_text):
+    """'<branch> (<commit_text>)' for the baseline or candidate side of a comparison, or commit_text alone when the
+    branch is unknown (a detached checkout outside CI)."""
+    branch = results['ci'][f'{side}_branch'] or results['builds'][side]['provenance']['branch']
+    return commit_text if branch == 'HEAD' else f'{branch} ({commit_text})'

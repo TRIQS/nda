@@ -13,55 +13,28 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <random>
 #include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-namespace nda_bench {
-
-  // Explicit value types for one registration; every operand uses the same type.
-  template <typename... Ts>
-  struct types {
-    private:
-    template <typename T>
-    static constexpr std::size_t count = (std::size_t{0} + ... + std::size_t{std::same_as<T, Ts>});
-
-    static constexpr bool supported =
-       ((std::same_as<Ts, float> || std::same_as<Ts, double> || std::same_as<Ts, std::complex<float>> || std::same_as<Ts, std::complex<double>>)
-        && ...);
-    static constexpr bool unique = ((count<Ts> == 1) && ...);
-
-    public:
-    static_assert(sizeof...(Ts) > 0, "Select at least one benchmark value type");
-    static_assert(supported, "Supported benchmark types: float, double, std::complex<float>, std::complex<double>");
-    static_assert(unique, "Benchmark value types must not contain duplicates");
-
-    using tuple_type = std::tuple<Ts...>;
-  };
-
-  using types_real    = types<float, double>;
-  using types_complex = types<std::complex<float>, std::complex<double>>;
-  using types_single  = types<float, std::complex<float>>;
-  using types_double  = types<double, std::complex<double>>;
-  using types_all     = types<float, double, std::complex<float>, std::complex<double>>;
+namespace nda::bench {
 
   inline constexpr std::int64_t min_dim = 16; // dimension along every axis
   // The sweep caps each owning operand, including unexposed slice elements.
   inline constexpr std::int64_t max_elements = std::int64_t{1} << 22;
-  static_assert(min_dim > 0 && min_dim < max_elements);
+  static_assert(min_dim > 0 and min_dim < max_elements);
 
-  template <typename LHS, typename RHS>
+  template <nda::ArrayOrScalar LHS, nda::ArrayOrScalar RHS>
   auto product_shape(LHS const &a, RHS const &b) {
     if constexpr (nda::Scalar<LHS>) {
       return b.shape();
     } else if constexpr (nda::Scalar<RHS>) {
       return a.shape();
-    } else if constexpr (nda::get_algebra<LHS> == 'M' && nda::get_algebra<RHS> == 'M') {
+    } else if constexpr (nda::get_algebra<LHS> == 'M' and nda::get_algebra<RHS> == 'M') {
       return std::array{a.extent(0), b.extent(1)};
-    } else if constexpr (nda::get_algebra<LHS> == 'M' && nda::get_algebra<RHS> == 'V') {
+    } else if constexpr (nda::get_algebra<LHS> == 'M' and nda::get_algebra<RHS> == 'V') {
       return std::array{a.extent(0)};
     } else {
       return a.shape();
@@ -75,7 +48,8 @@ namespace nda_bench {
     static constexpr bool supports_rank3   = true;
     static constexpr bool supports_matrix  = true;
 
-    template <typename First, typename... Rest>
+    // At least one of them has to be Array.
+    template <nda::ArrayOrScalar First, nda::ArrayOrScalar... Rest>
     static auto result_shape(First const &first, Rest const &...rest) {
       if constexpr (nda::Array<First>) {
         return first.shape();
@@ -85,142 +59,186 @@ namespace nda_bench {
     }
   };
 
-  namespace detail {
+  // Runs one operation for one value type and an ordered list of input descriptors.
+  //
+  // Template parameters:
+  //   ValueType: the element/scalar type shared by all inputs, e.g. double or std::complex<double>.
+  //   Operation: a type providing static op(args...) and the supports_* flags, usually by inheriting
+  //              op_defaults. result_shape(args...) supplies the output shape when storage is reused.
+  //              An operation with a static target index instead provides op(output, args...).
+  //   Inputs...: one descriptor per argument, in op's argument order, e.g. array_input<2>,
+  //              scalar_input<>, matrix_input<>, or row_slice<matrix_input<>>.
+  //
+  // Registration and setup:
+  //   register_case(name) checks the operation's supported types, ranks, and algebra, then registers
+  //   a Google Benchmark case named <type>/<input ids>/<name>. custom_range appends dimensions
+  //   N = 16, 64, 256, ... while every descriptor's input_size(N) stays within max_elements.
+  //   input_size counts the full backing allocation, including elements hidden by a slice.
+  //
+  //   For each N, the constructor receives benchmark::State and reads N from state.range(0).
+  //   Each Input::create_input<ValueType>(N) creates and initializes its owned data, stored in
+  //   input_data as a tuple of Input::input_type<ValueType>. array_input<2> creates an N x N array
+  //   with random values in [1, 2) by default; scalar_input<> creates one random scalar and ignores N.
+  //   A slice descriptor creates its underlying input's full allocation at this stage.
+  //
+  //   Input::get_benchmark_argument(data) exposes the argument passed to Operation::op: a reference
+  //   for a full array/scalar, or a view for a slice. make_benchmark_arguments() calls it for each tuple
+  //   element and collects the results in benchmark_arguments. The owning input_data must outlive
+  //   these references and views.
+  //   Both input creation and argument extraction happen once, before the timed iteration loop.
+  //
+  // Execution (run selects a path at compile time):
+  //   - Operation::target present: copy that argument into an owning output once, then repeatedly
+  //     call op(output, args...). All original arguments are still passed, including the target.
+  //   - Array expression/view/reference returned: allocate and initialize an owning output once
+  //     using result_shape(args...), then evaluate output() = op(args...) each iteration.
+  //   - Scalar or owning array returned: assign output = op(args...) each iteration; allocations
+  //     performed inside op are therefore part of the measured work.
+  //
+  // Examples (op_add is the operation returning a + b):
+  //   benchmark_runner<double, op_add, array_input<2>, scalar_input<>>
+  //     owns an N x N double array and a double scalar, then times their addition into reused output.
+  //   benchmark_runner<double, op_add, row_slice<matrix_input<>>, row_slice<matrix_input<>>>
+  //     owns two N x N matrices and passes views of rows 0, 2, 4, ... to op_add.
+  //   NDA_BENCHMARK(op_add, "add", types_double, array_input<2>, scalar_input<>)
+  //     registers a runner for each value type in types_double (double and std::complex<double>).
+  template <typename ValueType, typename Operation, typename... Inputs>
+  struct benchmark_runner {
+    static constexpr bool has_inputs = sizeof...(Inputs) > 0;
+    static_assert(has_inputs, "A benchmark needs at least one input descriptor");
 
-    // Build the operand tuple from storage, preserving references and slice views.
-    template <typename ValueType, typename... Inputs>
-    auto make_operands(std::tuple<typename Inputs::template storage_type<ValueType>...> &storage) {
+    // input_data_type owns the data; benchmark_arguments_type holds references or slice views passed to the computation.
+    using input_data_type = std::tuple<typename Inputs::template input_type<ValueType>...>;
+    using benchmark_arguments_type = std::tuple<decltype(Inputs::get_benchmark_argument(std::declval<typename Inputs::template input_type<ValueType> &>()))...>;
+
+    benchmark::State &state; //NOLINT
+    input_data_type input_data;
+    // The run_* functions time a local copy of this tuple: read through *this, the arguments made GCC emit a slower
+    // loop for some operations (f64/M2,S/add/16 took 143 ns instead of 84 ns).
+    benchmark_arguments_type benchmark_arguments;
+
+    explicit benchmark_runner(benchmark::State &benchmark_state)
+       : state(benchmark_state), input_data(make_input_data(state.range(0))), benchmark_arguments(make_benchmark_arguments()) {}
+
+    static input_data_type make_input_data(std::int64_t N) {
+      nda::random::set_seed(42);
+      return input_data_type{Inputs::template create_input<ValueType>(N)...};
+    }
+
+    benchmark_arguments_type make_benchmark_arguments() {
       return [&]<std::size_t... I>(std::index_sequence<I...>) {
-        return std::tuple<decltype(Inputs::get(std::get<I>(storage)))...>{Inputs::get(std::get<I>(storage))...};
+        return benchmark_arguments_type{Inputs::get_benchmark_argument(std::get<I>(input_data))...};
       }(std::index_sequence_for<Inputs...>{});
     }
 
-    // Unpack the operand tuple and call the operation, preserving its return type.
-    template <typename Operation, typename... OperandTypes>
-    decltype(auto) invoke_op(std::tuple<OperandTypes...> const &operands) {
-      return std::apply([](auto const &...args) -> decltype(auto) { return Operation::op(args...); }, operands);
-    }
-
-    struct benchmark_stats {
-      std::int64_t input_elements = 0;
-      std::int64_t bytes          = 0;
-    };
-
-    template <typename OperandTuple>
-    benchmark_stats measure_inputs(OperandTuple const &operands) {
-      benchmark_stats stats;
-      std::apply(
-         [&](auto const &...x) {
-           ((stats.input_elements = std::max(stats.input_elements, array_elements(x)), stats.bytes += logical_bytes(x)), ...);
-         },
-         operands);
-      return stats;
-    }
-
-    template <typename ValueType, typename Operation, typename... Inputs>
-    void run_benchmark(benchmark::State &state) {
-      static_assert(sizeof...(Inputs) > 0, "A benchmark needs at least one input descriptor");
-      std::int64_t const N = state.range(0);
-      std::mt19937_64 rng{42};
-
-      std::tuple<typename Inputs::template storage_type<ValueType>...> storage{Inputs::template generate<ValueType>(N, rng)...};
-      // References and views borrow storage; keep this tuple local and immutable.
-      const auto operands = make_operands<ValueType, Inputs...>(storage);
-      auto stats          = measure_inputs(operands);
-
-      if constexpr (requires { Operation::target; }) {
-        // out starts as a copy of operand `target` and is not reset between calls.
-        nda::get_regular_t<std::remove_cvref_t<std::tuple_element_t<Operation::target, decltype(operands)>>> R(std::get<Operation::target>(operands));
-        for (auto s : state) {
-          std::apply([&R](auto const &...args) { Operation::op(R, args...); }, operands);
-          benchmark::DoNotOptimize(R);
-        }
-        stats.bytes += logical_bytes(R);
+    void run() {
+      if constexpr (requires { Operation::target; }) { // Tensor operations
+        run_in_place();
       } else {
-        using ReturnType = decltype(invoke_op<Operation>(operands));
+        using ReturnType = decltype(std::apply([](auto const &...args) -> decltype(auto) { return Operation::op(args...); }, benchmark_arguments));
         using ResultType = std::remove_cvref_t<ReturnType>;
 
-        // The result value type can differ from ValueType: real for abs2 and for abs, real and imag on
-        // complex, bool for isnan, promoted for pow. A scalar result adds no bytes.
-        if constexpr (nda::Array<ResultType> && (std::is_reference_v<ReturnType> || !nda::is_regular_v<ResultType>)) {
-          // Shape discovery must not execute eager subexpressions such as matrix A * B + C.
-          auto shape = std::apply([](auto const &...args) { return Operation::result_shape(args...); }, operands);
-          nda::get_regular_t<ResultType> R(shape);
-          R.as_array_view() = nda::get_value_t<ResultType>{}; // fault the pages in before the clock starts
-          for (auto s : state) {
-            // View assignment reuses storage, including for borrowed results.
-            R() = invoke_op<Operation>(operands);
-            benchmark::DoNotOptimize(R);
-          }
-          stats.bytes += logical_bytes(R);
+        static constexpr bool reuse_output = nda::Array<ResultType> and (std::is_reference_v<ReturnType> or not nda::is_regular_v<ResultType>);
+
+        if constexpr (reuse_output) {
+          run_with_reused_output<ResultType>();
         } else {
-          ResultType R{};
-          for (auto s : state) {
-            R = invoke_op<Operation>(operands);
-            benchmark::DoNotOptimize(R);
-          }
-          stats.bytes += logical_bytes(R);
+          run_with_returned_output<ResultType>();
         }
       }
-
-      state.SetItemsProcessed(state.iterations() * stats.input_elements);
-      state.SetBytesProcessed(state.iterations() * stats.bytes);
-      state.counters["NumberOfElements"] = stats.input_elements;
-      state.counters["bytesize"]         = stats.bytes;
     }
 
-    template <typename ValueType, typename... Inputs>
-    void custom_range(benchmark::Benchmark *b) {
-      for (std::int64_t N = min_dim; ((Inputs::template storage_size<ValueType>(N) <= max_elements) && ...); N *= 4) { b->Arg(N); }
+    void run_in_place() {
+      // Copy the target once; repeated calls update the same output.
+      using TargetType = std::remove_cvref_t<std::tuple_element_t<Operation::target, benchmark_arguments_type>>;
+      auto benchmark_arguments_copy = benchmark_arguments;
+      nda::get_regular_t<TargetType> output(std::get<Operation::target>(benchmark_arguments_copy));
+      for (auto s : state) {
+        std::apply([&output](auto const &...args) { Operation::op(output, args...); }, benchmark_arguments_copy);
+        benchmark::DoNotOptimize(output);
+      }
     }
 
-    template <typename ValueType, typename Operation, typename Input>
-    constexpr bool supports_input() {
-      using OperandType = std::remove_cvref_t<decltype(Input::get(std::declval<typename Input::template storage_type<ValueType> &>()))>;
-      if constexpr (nda::is_complex_v<nda::get_value_t<OperandType>> && !Operation::supports_complex) {
-        return false;
-      } else if constexpr (nda::Array<OperandType>) {
-        return (nda::get_rank<OperandType> != 2 || Operation::supports_rank2) && (nda::get_rank<OperandType> != 3 || Operation::supports_rank3)
-           && (Input::algebra != 'M' || Operation::supports_matrix);
+    template <typename ResultType>
+    void run_with_reused_output() {
+      auto benchmark_arguments_copy = benchmark_arguments;
+      // Discover the shape without executing eager subexpressions such as matrix A * B + C.
+      auto shape = std::apply([](auto const &...args) { return Operation::result_shape(args...); }, benchmark_arguments_copy);
+      nda::get_regular_t<ResultType> output(shape);
+      output() = nda::get_value_t<ResultType>{}; // fault the pages in before the clock starts
+      for (auto s : state) {
+        output() = std::apply([](auto const &...args) -> decltype(auto) { return Operation::op(args...); }, benchmark_arguments_copy);
+        benchmark::DoNotOptimize(output);
+      }
+    }
+
+    template <typename ResultType>
+    void run_with_returned_output() {
+      // ResultType also covers scalar reductions and eager array results.
+      auto benchmark_arguments_copy = benchmark_arguments;
+      ResultType output{};
+      for (auto s : state) {
+        output = std::apply([](auto const &...args) -> decltype(auto) { return Operation::op(args...); }, benchmark_arguments_copy);
+        benchmark::DoNotOptimize(output);
+      }
+    }
+
+    static void custom_range(benchmark::Benchmark *b) {
+      for (std::int64_t N = min_dim; ((Inputs::input_size(N) <= max_elements) and ...); N *= 4) { b->Arg(N); }
+    }
+
+    template <typename Input>
+    static constexpr bool supports_input() {
+      using InputDataType            = typename Input::template input_type<ValueType>;
+      using OperandType              = std::remove_cvref_t<decltype(Input::get_benchmark_argument(std::declval<InputDataType &>()))>;
+      constexpr bool value_supported = not nda::is_complex_v<ValueType> or Operation::supports_complex;
+
+      if constexpr (nda::Array<OperandType>) {
+        constexpr int rank               = nda::get_rank<OperandType>;
+        constexpr bool rank2_supported   = rank != 2 or Operation::supports_rank2;
+        constexpr bool rank3_supported   = rank != 3 or Operation::supports_rank3;
+        constexpr bool algebra_supported = Input::algebra != 'M' or Operation::supports_matrix;
+        return value_supported and rank2_supported and rank3_supported and algebra_supported;
       } else {
-        return true;
+        return value_supported;
       }
     }
 
     // Name grammar <type>/<shape>/<op>, with the dimension appended by google-benchmark.
-    template <typename ValueType, typename Operation, typename... Inputs>
-    void register_case(std::string const &op_name) {
-      static_assert((supports_input<ValueType, Operation, Inputs>() && ...),
-                    "Benchmark input type, rank, or algebra is unsupported by this operation");
-      std::string shapes;
-      ((shapes += (shapes.empty() ? "" : ",") + Inputs::template id<ValueType>()), ...);
-      auto name = std::string(type_tag<ValueType>()) + "/" + shapes + "/" + op_name;
-      benchmark::RegisterBenchmark(name, &run_benchmark<ValueType, Operation, Inputs...>)
-         ->Apply(custom_range<ValueType, Inputs...>)
-         ->ComputeStatistics("min", [](std::vector<double> const &v) { return *std::min_element(v.begin(), v.end()); })
-         ->Unit(benchmark::kMicrosecond);
+    static void register_case(std::string const &op_name) {
+      constexpr bool inputs_supported = (supports_input<Inputs>() and ...);
+      static_assert(inputs_supported, "Benchmark input type, rank, or algebra is unsupported by this operation");
+      if constexpr (inputs_supported) {
+        std::string shapes;
+        ((shapes += (shapes.empty() ? "" : ",") + Inputs::id()), ...);
+        auto name = std::string(type_tag<ValueType>()) + "/" + shapes + "/" + op_name;
+        benchmark::RegisterBenchmark(name,
+                                     [](benchmark::State &state) {
+                                       benchmark_runner runner{state};
+                                       runner.run();
+                                     })
+           ->Apply(&benchmark_runner::custom_range)
+           ->ComputeStatistics("min", [](std::vector<double> const &v) { return *std::min_element(v.begin(), v.end()); })
+           ->Unit(benchmark::kMicrosecond);
+      }
     }
+  };
+
+  namespace detail {
 
     template <typename Operation, typename ValueTypes, typename... Inputs>
     struct input_registrar {
-      using selected_types = typename ValueTypes::tuple_type;
-
-      template <typename ValueType>
-      static void register_type(std::string const &name) {
-        constexpr bool supported = (supports_input<ValueType, Operation, Inputs>() && ...);
-        static_assert(supported, "Selected benchmark type, rank, or algebra is unsupported by this operation");
-        if constexpr (supported) { register_case<ValueType, Operation, Inputs...>(name); }
-      }
+      using value_types_tuple = typename ValueTypes::tuple_type;
 
       input_registrar(std::string const &name) {
         [&]<std::size_t... I>(std::index_sequence<I...>) {
-          (register_type<std::tuple_element_t<I, selected_types>>(name), ...);
-        }(std::make_index_sequence<std::tuple_size_v<selected_types>>{});
+          (benchmark_runner<std::tuple_element_t<I, value_types_tuple>, Operation, Inputs...>::register_case(name), ...);
+        }(std::make_index_sequence<std::tuple_size_v<value_types_tuple>>{});
       }
     };
 
   } // namespace detail
-} // namespace nda_bench
+} // namespace nda::bench
 
 // Arguments next to ## are not expanded first. JOIN expands __COUNTER__ to a number,
 // then JOIN_IMPL pastes it into the unique registration variable name.
@@ -228,4 +246,4 @@ namespace nda_bench {
 #define NDA_BENCH_JOIN(A, B) NDA_BENCH_JOIN_IMPL(A, B)
 // Keep the type list in __VA_ARGS__ so its template commas pass through intact.
 #define NDA_BENCHMARK(OP_TYPE, NAME, ...)                                                                                                            \
-  static ::nda_bench::detail::input_registrar<OP_TYPE, __VA_ARGS__> NDA_BENCH_JOIN(input_registrar_, __COUNTER__)(NAME);
+  static ::nda::bench::detail::input_registrar<OP_TYPE, __VA_ARGS__> NDA_BENCH_JOIN(input_registrar_, __COUNTER__)(NAME);

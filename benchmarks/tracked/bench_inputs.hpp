@@ -6,18 +6,35 @@
 #pragma once
 
 #include <nda/nda.hpp>
-#include <array>
+#include <cmath>
 #include <complex>
 #include <concepts>
+#include <cstddef>
 #include <cstdint>
-#include <random>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 
-namespace nda_bench {
+namespace nda::bench {
+  // Explicit value types for one registration; every operand uses the same type.
+  template <typename... Ts>
+  struct types {
+    template <typename T>
+    static constexpr std::size_t count = (std::size_t{0} + ... + std::size_t{std::same_as<T, Ts>});
+
+    static constexpr bool supported = (nda::is_any_of<Ts, float, double, std::complex<float>, std::complex<double>> and ...);
+    static constexpr bool unique = ((count<Ts> == 1) and ...);
+
+    static_assert(sizeof...(Ts) > 0, "Select at least one benchmark value type");
+    static_assert(supported, "Supported benchmark types: float, double, std::complex<float>, std::complex<double>");
+    static_assert(unique, "Benchmark value types must not contain duplicates");
+
+    using tuple_type = std::tuple<Ts...>;
+  };
+
   // Tag used in the benchmark name. The Python tools read it back from the case names: give a new
   // tag its C++ type in VALUE_TYPES in tools/benchmarks/common.py too, or the report's groupings
   // and the charts' legend show the bare tag.
@@ -36,163 +53,138 @@ namespace nda_bench {
     }
   }
 
-  template <typename Layout>
-  consteval std::string_view layout_tag() {
-    if constexpr (std::same_as<Layout, nda::C_layout>) {
-      return "C_layout";
-    } else if constexpr (std::same_as<Layout, nda::F_layout>) {
-      return "F_layout";
-    } else {
-      return "Unknown";
-    }
-  }
-
-  // Each input selects bounds for the range its expression needs.
-  // The default keeps values away from zero so division, log and sqrt
-  // behave, but that is wrong for asin/acos (domain [-1,1]) and product (overflows), which
-  // override it.
-  struct input_range {
-    double lower = 1.0;
-    double upper = 2.0; // default: [1, 2)
-  };
-
-  struct product_band {
-    static constexpr input_range value{.lower = 0.5 - 5e-8, .upper = 0.5 + 5e-8};
-  };
-  struct signed_band {
-    static constexpr input_range value{.lower = -1.0, .upper = 1.0};
-  };
-  struct positive_band {
-    static constexpr input_range value{};
-  };
-
-  template <typename ValueType>
-  ValueType random_value(std::mt19937_64 &rng, input_range const &range) {
-    constexpr bool supported = nda::is_blas_lapack_v<ValueType>;
-    static_assert(supported, "Benchmark input generation supports only float, double, std::complex<float>, and std::complex<double>");
-    if constexpr (nda::is_complex_v<ValueType>) {
-      using RealType = nda::remove_complex_t<ValueType>;
-      return ValueType{random_value<RealType>(rng, range),
-                       random_value<RealType>(rng, input_range{.lower = 0.0, .upper = range.upper - range.lower})};
-    } else {
-      return std::uniform_real_distribution<ValueType>{static_cast<ValueType>(range.lower), static_cast<ValueType>(range.upper)}(rng);
-    }
-  }
-
-  template <nda::ArrayOrScalar OperandType>
-  std::int64_t array_elements(OperandType const &x) {
-    if constexpr (nda::Array<OperandType>) {
-      return x.size();
-    } else {
-      return 0;
-    }
-  }
-
-  template <nda::ArrayOrScalar OperandType>
-  std::int64_t logical_bytes(OperandType const &x) {
-    return array_elements(x) * static_cast<std::int64_t>(sizeof(nda::get_value_t<OperandType>));
-  }
-
-  template <std::int32_t Rank, char Algebra = 'A', typename Layout = nda::C_layout, typename Band = positive_band>
+  // The default [1, 2) keeps inputs away from zero for division, log, and sqrt.
+  template <std::int32_t Rank, char Algebra = 'A', typename Layout = nda::C_layout, auto Lower = 1.0, auto Upper = 2.0>
   struct array_input {
-    static_assert(Rank > 0 && (Algebra == 'A' || (Algebra == 'M' && Rank == 2) || (Algebra == 'V' && Rank == 1)),
-                  "Input rank must be positive; algebra must be A, M (rank 2), or V (rank 1)");
+    static constexpr bool is_matrix     = Algebra == 'M' and Rank == 2;
+    static constexpr bool is_array      = Algebra == 'A';
+    static constexpr bool is_vector     = Algebra == 'V' and Rank == 1;
 
-    static constexpr std::string_view name = Algebra == 'M' ? "M" : Algebra == 'V' ? "V" : "A";
+    static_assert(Rank > 0, "Input rank must be positive");
+    static_assert(is_array or is_matrix or is_vector, "Input must be an array ('A'), a rank-2 matrix ('M'), or a rank-1 vector ('V')");
+
+    static constexpr std::string_view name = is_matrix ? "M" : is_vector ? "V" : "A";
 
     static constexpr char algebra = Algebra;
 
     template <typename ValueType>
-    using storage_type = nda::basic_array<ValueType, Rank, Layout, Algebra, nda::heap<>>;
+    using input_type = nda::basic_array<ValueType, Rank, Layout, Algebra, nda::heap<>>;
 
-    template <typename ValueType>
     static std::string id() {
-      return std::string(name) + std::to_string(Rank) + "_" + std::string(layout_tag<Layout>());
+      return std::string(name) + std::to_string(Rank) + "_" + std::string(Layout::to_string());
+    }
+
+    static std::int64_t input_size(std::int64_t N) {
+      return static_cast<std::int64_t>(std::pow(N, Rank));
     }
 
     template <typename ValueType>
-    static constexpr std::int64_t storage_size(std::int64_t N) {
-      std::int64_t n = 1;
-      for (std::int32_t i = 0; i < Rank; ++i) { n *= N; }
-      return n;
+    static auto create_input(std::int64_t N) {
+      using ArrayType = input_type<ValueType>;
+      auto shape = nda::stdutil::make_initialized_array<Rank>(N);
+      return ArrayType::rand(shape, Lower, Upper);
     }
 
-    template <typename ValueType>
-    static auto generate(std::int64_t N, std::mt19937_64 &rng) {
-      std::array<std::int64_t, Rank> shape;
-      shape.fill(N);
-      storage_type<ValueType> result(shape);
-      for (auto &x : result) { x = random_value<ValueType>(rng, Band::value); }
-      return result;
-    }
-
-    template <typename StorageType>
-    static auto &get(StorageType &storage) {
-      return storage;
+    template <typename InputDataType>
+    static auto &get_benchmark_argument(InputDataType &input_data) {
+      return input_data;
     }
   };
 
-  template <typename Layout = nda::C_layout, typename Band = positive_band>
-  using matrix_input = array_input<2, 'M', Layout, Band>;
 
-  template <typename Layout = nda::C_layout, typename Band = positive_band>
-  using vector_input = array_input<1, 'V', Layout, Band>;
 
-  template <typename Band = positive_band>
+  template <auto Lower = 1.0, auto Upper = 2.0>
   struct scalar_input {
     static constexpr std::string_view name = "S";
 
     static constexpr char algebra = 'S';
 
     template <typename ValueType>
-    using storage_type = ValueType;
+    using input_type = ValueType;
 
-    template <typename ValueType>
     static std::string id() {
       return std::string(name);
     }
 
-    template <typename ValueType>
-    static constexpr std::int64_t storage_size(std::int64_t) {
+    static constexpr std::int64_t input_size(std::int64_t) {
       return 0;
     }
 
     template <typename ValueType>
-    static ValueType generate(std::int64_t, std::mt19937_64 &rng) {
-      return random_value<ValueType>(rng, Band::value);
+    static ValueType create_input(std::int64_t) {
+      using ArrayType = nda::stack_array<ValueType, 1>;
+      return ArrayType::rand({1}, Lower, Upper)(0);
     }
 
-    template <typename StorageType>
-    static auto &get(StorageType &storage) {
-      return storage;
+    template <typename InputDataType>
+    static auto &get_benchmark_argument(InputDataType &input_data) {
+      return input_data;
     }
   };
 
   template <typename Input, std::int32_t Axis, std::int64_t Step, std::int64_t Start = 0>
-  struct slice_input : Input {
-    static_assert(Axis >= 0 && Step > 0 && Start >= 0, "Slice axis/start must be nonnegative and step positive");
+  struct slice_input {
+    static_assert(Axis >= 0, "Slice axis must be nonnegative");
+    static_assert(Step > 0, "Slice step must be positive");
+    static_assert(Start >= 0, "Slice start must be nonnegative");
 
     static constexpr std::string_view name = "slice";
 
+    static constexpr char algebra = Input::algebra;
+
     template <typename ValueType>
+    using input_type = typename Input::template input_type<ValueType>;
+
+    static std::int64_t input_size(std::int64_t N) {
+      return Input::input_size(N);
+    }
+
+    template <typename ValueType>
+    static auto create_input(std::int64_t N) {
+      return Input::template create_input<ValueType>(N);
+    }
+
     static std::string id() {
-      return Input::template id<ValueType>() + "." + std::string(name) + "(axis=" + std::to_string(Axis) + ",start=" + std::to_string(Start)
+      return Input::id() + "." + std::string(name) + "(axis=" + std::to_string(Axis) + ",start=" + std::to_string(Start)
          + ",step=" + std::to_string(Step) + ")";
     }
 
-    template <typename StorageType>
-    static auto get(StorageType &storage) {
-      auto &&a = Input::get(storage);
+    template <typename InputDataType>
+    static auto get_benchmark_argument(InputDataType &input_data) {
+      auto &&a = Input::get_benchmark_argument(input_data);
+      using OperandType = decltype(a);
+      static constexpr int rank = nda::get_rank<OperandType>;
+
+      static constexpr bool owns_memory    = nda::is_regular_v<std::remove_cvref_t<OperandType>>;
+      static constexpr bool is_lvalue      = std::is_lvalue_reference_v<OperandType>;
+      static constexpr bool lifetime_valid = not owns_memory or is_lvalue;
+      static constexpr bool axis_in_bounds = Axis < rank;
+
       // A temporary owning array would be destroyed on return, leaving the slice dangling.
-      static_assert(!nda::is_regular_v<std::remove_cvref_t<decltype(a)>> || std::is_lvalue_reference_v<decltype(a)>,
-                    "Input::get must return owning arrays by lvalue reference when used with slice_input");
-      static_assert(Axis < nda::get_rank<decltype(a)>, "Slice axis exceeds input rank");
-      if (Start >= a.extent(Axis)) { throw std::invalid_argument("Slice is empty at this benchmark size"); }
-      return [&]<std::size_t... I>(std::index_sequence<I...>) {
-        return a(nda::range(I == Axis ? Start : 0, a.extent(I), I == Axis ? Step : 1)...);
-      }(std::make_index_sequence<nda::get_rank<decltype(a)>>{});
+      static_assert(lifetime_valid, "Input::get_benchmark_argument must return owning arrays by lvalue reference when used with slice_input");
+      static_assert(axis_in_bounds, "Slice axis exceeds input rank");
+      auto const axis_extent = a.extent(Axis);
+      if (Start >= axis_extent) { throw std::invalid_argument("Slice is empty at this benchmark size"); }
+
+      auto range_for_dimension = [&]<std::size_t Dimension>() {
+        if constexpr (Dimension == Axis) {
+          return nda::range(Start, axis_extent, Step);
+        } else {
+          return nda::range::all;
+        }
+      };
+
+      return [&]<std::size_t... Dimensions>(std::index_sequence<Dimensions...>) {
+        return a(range_for_dimension.template operator()<Dimensions>()...);
+      }(std::make_index_sequence<rank>{});
     }
   };
+
+  template <typename Layout = nda::C_layout, auto Lower = 1.0, auto Upper = 2.0>
+  using matrix_input = array_input<2, 'M', Layout, Lower, Upper>;
+
+  template <typename Layout = nda::C_layout, auto Lower = 1.0, auto Upper = 2.0>
+  using vector_input = array_input<1, 'V', Layout, Lower, Upper>;
 
   template <typename Input, std::int64_t Step = 2, std::int64_t Start = 0>
   using row_slice = slice_input<Input, 0, Step, Start>;
@@ -200,4 +192,10 @@ namespace nda_bench {
   template <typename Input, std::int64_t Step = 2, std::int64_t Start = 0>
   using col_slice = slice_input<Input, 1, Step, Start>;
 
-} // namespace nda_bench
+  using types_real    = types<float, double>;
+  using types_complex = types<std::complex<float>, std::complex<double>>;
+  using types_single  = types<float, std::complex<float>>;
+  using types_double  = types<double, std::complex<double>>;
+  using types_all     = types<float, double, std::complex<float>, std::complex<double>>;
+
+} // namespace nda::bench

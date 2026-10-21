@@ -5,7 +5,7 @@
 
 #include "./bench_ops.hpp"
 
-using nda_bench::op_defaults;
+using nda::bench::op_defaults;
 
 struct op_pow : op_defaults {
   static decltype(auto) op(auto const &A) { return pow(A, 3.5); }
@@ -41,7 +41,7 @@ struct op_min : op_defaults {
   static constexpr bool supports_complex = false;
 };
 
-using namespace nda_bench;
+using namespace nda::bench;
 
 NDA_BENCHMARK(op_pow, "pow", types_double, array_input<2>)
 
