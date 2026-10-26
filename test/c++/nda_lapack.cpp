@@ -589,7 +589,10 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
   auto D = nda::eye<double>(n) * a + nda::diag(nda::vector<double>::rand(n)) * (b - a);
 
   // return Q * D * Q^H (hermitian/symmetric)
-  return matrix_t{Q * D * nda::dagger(Q)};
+  auto A = matrix_t{Q * D * nda::dagger(Q)};
+
+  // symmetrize to remove rounding errors
+  return matrix_t{(A + nda::dagger(A)) / 2};
 }
 
 // Test LAPACK syev and heev functions.
@@ -649,7 +652,7 @@ void test_sygv_hegv(int itype, auto xxgv) {
   using fp_t = nda::get_fp_t<T>;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
-    auto B = syhe_matrix<T>(i, 1e-6, 1);
+    auto B = syhe_matrix<T>(i, 1e-1, 1);
 
     // compute eigenvalues and eigenvectors
     auto A1 = A;
@@ -783,7 +786,8 @@ void test_ggev_real() {
 
   for (auto n : nda::range(1, 6)) {
     auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
-    auto B = nda::matrix<T, nda::F_layout>::rand(n, n);
+    // make B strictly diagonally dominant so that it is invertible and well-conditioned
+    auto B = nda::matrix<T, nda::F_layout>{nda::matrix<T, nda::F_layout>::rand(n, n) + T(2 * n) * nda::eye<T>(n)};
 
     // compute eigenvalues and eigenvectors
     nda::matrix<T, nda::F_layout> A1{A}, B1{B}, vl(n, n), vr(n, n);
@@ -833,7 +837,8 @@ void test_ggev_complex() {
 
   for (auto n : nda::range(1, 6)) {
     auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
-    auto B = nda::matrix<T, nda::F_layout>::rand(n, n);
+    // make B strictly diagonally dominant so that it is invertible and well-conditioned
+    auto B = nda::matrix<T, nda::F_layout>{nda::matrix<T, nda::F_layout>::rand(n, n) + T(2 * n) * nda::eye<T>(n)};
 
     // compute eigenvalues and eigenvectors
     nda::matrix<T, nda::F_layout> A1{A}, B1{B}, U(n, n), V(n, n);

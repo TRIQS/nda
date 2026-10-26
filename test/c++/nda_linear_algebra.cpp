@@ -439,7 +439,7 @@ template <typename T>
 void test_generalized_eigh_eigvalsh(int itype) {
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
-    auto B = syhe_matrix<T>(i, 1e-6, 1);
+    auto B = syhe_matrix<T>(i, 1e-1, 1);
 
     // use eigh to compute eigenvalues and eigenvectors
     auto [w1, V1] = nda::linalg::eigh(A, B, itype);
