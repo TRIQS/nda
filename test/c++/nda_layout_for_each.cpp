@@ -17,6 +17,9 @@ TEST(NDA, ForEachIndexFromStrideOrder) {
   static_assert(nda::detail::index_from_stride_order<3>(order_code, 0) == 1);
   static_assert(nda::detail::index_from_stride_order<3>(order_code, 1) == 2);
   static_assert(nda::detail::index_from_stride_order<3>(order_code, 2) == 0);
+  static_assert(nda::detail::index_from_stride_order<3>(static_cast<uint64_t>(-1), 0) == 0);
+  static_assert(nda::detail::index_from_stride_order<3>(static_cast<uint64_t>(-1), 1) == 1);
+  static_assert(nda::detail::index_from_stride_order<3>(static_cast<uint64_t>(-1), 2) == 2);
   EXPECT_EQ(nda::detail::index_from_stride_order<3>(order_code, 0), 1);
   EXPECT_EQ(nda::detail::index_from_stride_order<3>(order_code, 1), 2);
   EXPECT_EQ(nda::detail::index_from_stride_order<3>(order_code, 2), 0);

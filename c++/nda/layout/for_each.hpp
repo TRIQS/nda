@@ -30,7 +30,8 @@ namespace nda {
     // Get the i-th slowest moving dimension from a given encoded stride order.
     template <int R>
     constexpr int index_from_stride_order(uint64_t stride_order, int i) {
-      if (stride_order == 0) return i;                 // default C-order
+      // Unspecified (0) and undefined (-1) stride orders use C-order.
+      if (stride_order == 0 or stride_order == uint64_t(-1)) return i;
       auto stride_order_arr = decode<R>(stride_order); // FIXME C++20
       return stride_order_arr[i];
     }
@@ -83,7 +84,7 @@ namespace nda {
    * e.g. for a 3-dimensional shape the function must be callable as `f(long, long, long)`.
    *
    * @tparam StaticExtents Encoded static extents.
-   * @tparam StrideOrder Encoded stride order.
+   * @tparam StrideOrder Encoded stride order. Zero or uint64_t(-1) selects C-order.
    * @tparam F Callable type.
    * @tparam R Number of dimensions.
    * @tparam Int Integer type used in the shape array.
