@@ -162,35 +162,26 @@ namespace nda::slice_static {
     template <size_t Q, size_t N>
     constexpr layout_prop_e slice_layout_prop(int P, bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_rangeall,
                                               std::array<int, N> const &orig_stride_order, layout_prop_e orig_layout_prop, int e_pos, int e_len) {
-      // if there are ranges in the arguments
-      if (not has_only_rangeall_and_long) {
-        if (P == 1)
-          // rank one is always at least strided_1d
-          return layout_prop_e::strided_1d;
-        else
-          // otherwise we don't know
-          return layout_prop_e::none;
-      }
-
-      // count the number of nda::range::all_t blocks in the argument list, e.g. long, range::all, range::all, long,
-      // range::all -> 2 blocks
       int n_rangeall_blocks         = 0;
       bool previous_arg_is_rangeall = false;
       for (int i = 0; i < N; ++i) {
         int q                = q_of_n(orig_stride_order[i], e_pos, e_len);
         bool arg_is_rangeall = args_is_rangeall[q];
-        if (arg_is_rangeall and (not previous_arg_is_rangeall)) ++n_rangeall_blocks;
+        if (arg_is_rangeall and not previous_arg_is_rangeall) ++n_rangeall_blocks;
         previous_arg_is_rangeall = arg_is_rangeall;
       }
-      bool rangeall_are_grouped_in_memory = (n_rangeall_blocks <= 1);
-      bool last_is_rangeall               = previous_arg_is_rangeall;
+      bool last_is_rangeall = previous_arg_is_rangeall;
 
-      // return the proper layout_prop_e
-      if (has_contiguous(orig_layout_prop) and rangeall_are_grouped_in_memory and last_is_rangeall) return layout_prop_e::contiguous;
-      if (has_strided_1d(orig_layout_prop) and rangeall_are_grouped_in_memory) return layout_prop_e::strided_1d;
-      if (has_smallest_stride_is_one(orig_layout_prop) and last_is_rangeall) return layout_prop_e::smallest_stride_is_one;
+      // Every rank-one slice has a constant stride.
+      auto prop = P == 1 ? layout_prop_e::strided_1d : layout_prop_e::none;
 
-      return layout_prop_e::none;
+      // Whole consecutive dimensions preserve the parent's constant stride.
+      if (has_only_rangeall_and_long and has_strided_1d(orig_layout_prop) and n_rangeall_blocks <= 1) prop = prop | layout_prop_e::strided_1d;
+
+      // Keeping the fastest dimension whole preserves its unit stride.
+      if (has_smallest_stride_is_one(orig_layout_prop) and last_is_rangeall) prop = prop | layout_prop_e::smallest_stride_is_one;
+
+      return prop;
     }
 
     // Get the contribution to the flat index of the first element of the slice from a single dimension if the argument
@@ -232,13 +223,11 @@ namespace nda::slice_static {
       // compile time check
       static_assert(IdxMap::rank() == sizeof...(Ns), "Internal error in slice_idx_map_impl: Rank and length of index sequence do not match");
 
-      // rank of original and resulting idx_map, number of arguments, length of ellipsis, position of ellipsis in the
-      // argument list
-      static constexpr int N     = sizeof...(Ns);
-      static constexpr int P     = sizeof...(Ps);
-      static constexpr int Q     = sizeof...(Args);
-      static constexpr int e_len = N - Q + 1;
-      static constexpr int e_pos = ellipsis_position<Args...>();
+      static constexpr int N     = sizeof...(Ns);                // rank of original idx_map
+      static constexpr int P     = sizeof...(Ps);                // rank of resulting idx_map
+      static constexpr int Q     = sizeof...(Args);              // number of args
+      static constexpr int e_len = N - Q + 1;                    // length of ellipsis
+      static constexpr int e_pos = ellipsis_position<Args...>(); // position of ellipsis
 
       // is i-th argument a range/range::all_t/ellipsis?
       static constexpr std::array<bool, Q> args_is_range{(std::is_same_v<Args, range> or std::is_base_of_v<range::all_t, Args>)...};

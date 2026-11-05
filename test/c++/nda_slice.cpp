@@ -202,6 +202,39 @@ TEST(NDA, SliceLayoutOf5DArray) {
   test5d<nda::encode(std::array{2, 4, 3, 0, 1})>();
 }
 
+TEST(NDA, SliceLayoutGuarantees) {
+  using nda::range;
+  nda::array<long, 3> c(5, 3, 16);
+  nda::array<long, 3, nda::F_layout> f(16, 3, 5);
+  auto rows = c(range::all, 1, range::all);
+  auto columns = f(range::all, 1, range::all);
+
+  // Ranges outside the fastest dimension preserve unit stride.
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(rows)>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(rows(range(0, 5, 2), range::all))>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(columns(range::all, range(0, 5, 2)))>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(c(range(0, 5, 2), 1, range::all))>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(f(range::all, 1, range(0, 5, 2)))>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(c(range(0, 5, 2), nda::ellipsis{}))>);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(f(nda::ellipsis{}, range(0, 5, 2)))>);
+
+  // The fastest dimension need not be the last argument.
+  using layout_t = nda::basic_layout<0, nda::encode(std::array{2, 0, 1}), nda::layout_prop_e::contiguous>;
+  nda::array<long, 3, layout_t> permuted(3, 16, 5);
+  static_assert(nda::has_layout_smallest_stride_is_one<decltype(permuted(range(0, 3, 2), range::all, range(0, 5, 2)))>);
+
+  // Runtime steps cannot establish unit stride.
+  auto nonunit_parent = rows(range::all, range(0, 16, 2));
+  static_assert(not nda::has_layout_smallest_stride_is_one<decltype(rows(range::all, range(0, 16, 1)))>);
+  static_assert(not nda::has_layout_smallest_stride_is_one<decltype(nonunit_parent(range(0, 5, 2), range::all))>);
+
+  // Rank one guarantees constant spacing, including with an unproven parent layout.
+  nda::array_view<long, 2, nda::C_stride_layout> unproven = rows;
+  static_assert(nda::has_contiguous_layout<decltype(rows(1, range::all))>);
+  static_assert(nda::has_layout_strided_1d<decltype(rows(range::all, 2))>);
+  static_assert(nda::has_layout_strided_1d<decltype(unproven(1, range::all))>);
+}
+
 TEST(NDA, SliceAndAccess3DArray) {
   auto n0 = 9, n1 = 7, n2 = 8;
   nda::array<std::complex<double>, 3, nda::contiguous_layout_with_stride_order<nda::encode(std::array{1, 0, 2})>> A(n0, n1, n2);
