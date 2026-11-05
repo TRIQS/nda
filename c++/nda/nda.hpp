@@ -41,6 +41,7 @@
 #include "./matrix_functions.hpp"
 #include "./mem.hpp"
 #include "./print.hpp"
+#include "./random.hpp"
 #include "./stdutil.hpp"
 #include "./tensor.hpp"
 #include "./traits.hpp"

@@ -27,6 +27,7 @@
 #include "./mem/fill.hpp"
 #include "./mem/memcpy.hpp"
 #include "./mem/policies.hpp"
+#include "./random.hpp"
 #include "./stdutil/array.hpp"
 #include "./traits.hpp"
 
@@ -431,6 +432,65 @@ namespace nda {
     }
 
     /**
+     * @brief Make a random-initialized array with the given shape and bounds.
+     *
+     * @note This overload is experimental and its interface may change.
+     *
+     * @details Real values are sampled from [lower, upper). For complex values, real and imaginary parts are sampled
+     * independently between the corresponding components of the bounds.
+     *
+     * @param shape Shape of the array.
+     * @param lower Lower bound (included).
+     * @param upper Upper bound (excluded).
+     * @return Random-initialized array.
+     */
+    template <std::integral Int = long>
+    static basic_array rand(std::array<Int, Rank> const &shape, ValueType lower, ValueType upper)
+      requires(std::is_floating_point_v<nda::remove_complex_t<ValueType>>)
+    {
+      using RealType = nda::remove_complex_t<ValueType>;
+
+      auto &gen       = nda::random::engine();
+      auto res        = basic_array{shape};
+      if constexpr (nda::is_complex_v<ValueType>) {
+        auto real_dist = std::uniform_real_distribution<RealType>(lower.real(), upper.real());
+        auto imag_dist = std::uniform_real_distribution<RealType>(lower.imag(), upper.imag());
+        for (auto &x : res) {
+          auto re = real_dist(gen); // separate statement: the real part is always drawn first
+          x       = ValueType{re, imag_dist(gen)};
+        }
+      } else {
+        auto dist = std::uniform_real_distribution<RealType>(lower, upper);
+        for (auto &x : res) x = dist(gen);
+      }
+      return res;
+    }
+
+    /**
+     * @brief Make a random-initialized array from numeric bounds, converting them to the array's value type.
+     *
+     * @note This overload is experimental and its interface may change.
+     *
+     * @details For complex arrays, the real part is sampled from [lower, upper) and the imaginary part from
+     * [0, upper - lower). Explicit complex bounds can be used to choose a different imaginary range.
+     */
+    template <std::integral Int = long, typename LowerType, typename UpperType>
+    static basic_array rand(std::array<Int, Rank> const &shape, LowerType lower, UpperType upper)
+      requires(std::is_floating_point_v<nda::remove_complex_t<ValueType>> && std::is_arithmetic_v<LowerType> && std::is_arithmetic_v<UpperType>
+               && !(std::same_as<LowerType, ValueType> && std::same_as<UpperType, ValueType>))
+    {
+      if constexpr (nda::is_complex_v<ValueType>) {
+        using RealType = nda::remove_complex_t<ValueType>;
+        using BoundsType = std::common_type_t<LowerType, UpperType, RealType>;
+        return rand(shape, ValueType{static_cast<RealType>(lower), 0},
+                    ValueType{static_cast<RealType>(upper),
+                              static_cast<RealType>(static_cast<BoundsType>(upper) - static_cast<BoundsType>(lower))});
+      } else {
+        return rand(shape, static_cast<ValueType>(lower), static_cast<ValueType>(upper));
+      }
+    }
+
+    /**
      * @brief Make a random-initialized array with the given shape.
      *
      * @details The random values are taken from a uniform distribution over [0, 1). For a complex array, both real and
@@ -444,17 +504,11 @@ namespace nda {
     static basic_array rand(std::array<Int, Rank> const &shape)
       requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>)
     {
-      auto static gen = std::mt19937_64{};
-      auto res        = basic_array{shape};
       if constexpr (nda::is_complex_v<ValueType>) {
-        auto static dist = std::uniform_real_distribution<typename ValueType::value_type>(0.0, 1.0);
-        using namespace std::complex_literals;
-        for (auto &x : res) x = dist(gen) + 1i * dist(gen);
+        return rand(shape, ValueType{0, 0}, ValueType{1, 1});
       } else {
-        auto static dist = std::uniform_real_distribution<ValueType>(0.0, 1.0);
-        for (auto &x : res) x = dist(gen);
+        return rand(shape, ValueType{0}, ValueType{1});
       }
-      return res;
     }
 
     /**

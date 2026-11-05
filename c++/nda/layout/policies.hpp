@@ -14,6 +14,8 @@
 #include "../traits.hpp"
 
 #include <cstdint>
+#include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace nda {
@@ -34,6 +36,9 @@ namespace nda {
    * @details The last dimension varies the fastest, the first dimension varies the slowest.
    */
   struct C_layout {
+    /// Name of the layout policy.
+    static constexpr std::string_view to_string() noexcept { return "C_layout"; }
+
     /// Multi-dimensional to flat index mapping.
     template <int Rank>
     using mapping = idx_map<Rank, 0, C_stride_order<Rank>, layout_prop_e::contiguous>;
@@ -50,6 +55,9 @@ namespace nda {
    * @details The first dimension varies the fastest, the last dimension varies the slowest.
    */
   struct F_layout {
+    /// Name of the layout policy.
+    static constexpr std::string_view to_string() noexcept { return "F_layout"; }
+
     /// Multi-dimensional to flat index mapping.
     template <int Rank>
     using mapping = idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::contiguous>;
@@ -66,6 +74,9 @@ namespace nda {
    * @details The last dimension varies the fastest, the first dimension varies the slowest.
    */
   struct C_stride_layout {
+    /// Name of the layout policy.
+    static constexpr std::string_view to_string() noexcept { return "C_stride_layout"; }
+
     /// Multi-dimensional to flat index mapping.
     template <int Rank>
     using mapping = idx_map<Rank, 0, C_stride_order<Rank>, layout_prop_e::none>;
@@ -82,6 +93,9 @@ namespace nda {
    * @details The first dimension varies the fastest, the last dimension varies the slowest.
    */
   struct F_stride_layout {
+    /// Name of the layout policy.
+    static constexpr std::string_view to_string() noexcept { return "F_stride_layout"; }
+
     /// Multi-dimensional to flat index mapping.
     template <int Rank>
     using mapping = idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::none>;
@@ -102,6 +116,13 @@ namespace nda {
    */
   template <uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   struct basic_layout {
+    /// Name of the layout policy, including its encoded extents, stride order, and layout properties.
+    static std::string_view to_string() {
+      static const std::string name = "basic_layout<" + std::to_string(StaticExtents) + ", " + std::to_string(StrideOrder) + ", "
+         + std::to_string(static_cast<uint64_t>(LayoutProp)) + ">";
+      return name;
+    }
+
     /// Multi-dimensional to flat index mapping.
     template <int Rank>
     using mapping = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;

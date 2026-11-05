@@ -113,6 +113,39 @@ def runBuild = { String platform, String prefix, List<String> envs ->
   }
 }
 
+def runBenchmarkComparison = {
+  stage('benchmark comparison') {
+    dir('benchmark-results') {
+      deleteDir()
+    }
+    /* Benchmarks never block a PR: a build or measurement failure (a baseline without tracked
+       benchmarks, say) marks the stage unstable and leaves the build result alone. */
+    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+      try {
+        sh 'sh tools/benchmarks/compare-benchmarks.sh'
+        sh 'python3 tools/benchmarks/charts.py benchmark-results'
+      } finally {
+        archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
+      }
+    }
+  }
+}
+
+/* Post comparison.md and charts.md (if drawn) as two PR comments, edited on later runs.
+   The images live on refs/benchmarks/pr-<n> (latest run only), as finufft's plots do. */
+def postBenchmarkComment = {
+  stage('benchmark comment') {
+    withCredentials([usernamePassword(credentialsId: 'github-jenkins',
+                                      usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
+      sh 'sh tools/benchmarks/post-comment.sh comparison benchmark-results/comparison.md'
+      if (fileExists('benchmark-results/charts.md')) {
+        sh 'sh tools/benchmarks/push-charts.sh benchmark-results'
+        sh 'sh tools/benchmarks/post-comment.sh charts benchmark-results/charts.md'
+      }
+    }
+  }
+}
+
 /* map of all builds to run, populated below */
 def platforms = [:]
 
@@ -155,6 +188,21 @@ for (int i = 0; i < macosPlatforms.size(); i++) {
 /****************** wrap-up */
 catchError {
   parallel platforms
+
+  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID) {
+    timeout(time: 1, unit: 'HOURS') {
+      // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
+      // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
+      runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
+        checkout scm
+        withEnv(['BENCHMARK_WORKERS=20']) {
+          runBenchmarkComparison()
+        }
+        if (fileExists('benchmark-results/comparison.md'))
+          postBenchmarkComment()
+      }
+    }
+  }
 
   if (keepInstall) {
     /* Publish results */
