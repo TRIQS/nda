@@ -121,18 +121,21 @@ H check_handle() {
   move2 = std::move(copy1);
   EXPECT_EQ(handle.size(), move1.size());
   EXPECT_EQ(handle.size(), move2.size());
-  std::swap(handle, handle); // check self swap
+#ifdef NDEBUG // self-swap violates the handle move-assign precondition; release-only.
+  std::swap(handle, handle);
+#endif
   for (int i = 0; i < handle.size(); ++i) {
     EXPECT_EQ(handle[i], static_cast<value_t>(i));
     EXPECT_EQ(move1[i], static_cast<value_t>(i));
     EXPECT_EQ(move2[i], static_cast<value_t>(i));
   }
 
-  // check self move assignment (see https://stackoverflow.com/questions/9322174/move-assignment-operator-and-if-this-rhs)
+#ifdef NDEBUG // self-move-assign violates the handle move-assign precondition; release-only.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wself-move"
   move1 = std::move(move1);
 #pragma GCC diagnostic pop
+#endif
 
   return handle;
 }

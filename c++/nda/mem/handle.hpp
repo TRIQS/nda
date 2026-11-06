@@ -174,9 +174,11 @@ namespace nda::mem {
      * @brief Move assignment operator first releases the resources held by the current handle and then moves the
      * resources from the source to the current handle.
      *
-     * @param h Source handle.
+     * @param h Source handle. Must not alias `*this`.
      */
     handle_heap &operator=(handle_heap &&h) noexcept {
+      EXPECTS(this != &h);
+
       // release current resources if they are not shared and not null
       if (not sptr and not(is_null())) destruct({_data, _size});
 
@@ -211,6 +213,7 @@ namespace nda::mem {
      * @param h Source handle.
      */
     handle_heap &operator=(handle_heap const &h) {
+      if (this == &h) return *this;
       *this = handle_heap{h};
       return *this;
     }
@@ -387,9 +390,10 @@ namespace nda::mem {
     /**
      * @brief Move assignment operator simply calls the copy assignment operator.
      * @details If an exception occurs in the constructor of `T`, the program terminates.
-     * @param h Source handle.
+     * @param h Source handle. Must not alias `*this`.
      */
     handle_stack &operator=(handle_stack &&h) noexcept {
+      EXPECTS(this != &h);
       operator=(h);
       return *this;
     }
@@ -406,6 +410,7 @@ namespace nda::mem {
      * @param h Source handle.
      */
     handle_stack &operator=(handle_stack const &h) {
+      if (this == &h) return *this;
       for (size_t i = 0; i < Size; ++i) new (data() + i) T(h[i]);
       return *this;
     }
@@ -550,9 +555,10 @@ namespace nda::mem {
      *
      * @details In both cases, it resets the source handle to a null state.
      *
-     * @param h Source handle.
+     * @param h Source handle. Must not alias `*this`.
      */
     handle_sso &operator=(handle_sso &&h) noexcept {
+      EXPECTS(this != &h);
       clean();
       _size = h._size;
       if (on_heap()) {
