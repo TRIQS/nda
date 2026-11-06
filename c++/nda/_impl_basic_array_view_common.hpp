@@ -302,11 +302,20 @@ decltype(auto) operator[](T const &x) && noexcept(has_no_boundcheck) {
 /// Rank of the nda::array_iterator for the view/array.
 static constexpr int iterator_rank = (has_strided_1d(layout_t::layout_prop) ? 1 : Rank);
 
-/// Const iterator type of the view/array.
-using const_iterator = array_iterator<iterator_rank, ValueType const, typename AccessorPolicy::template accessor<ValueType>::pointer>;
+// True if the array/view is a contiguous 1-dimensional chunk of memory. In this case the iterator is a
+// std::contiguous_iterator, so that the type models std::ranges::contiguous_range. This is restricted to genuine
+// rank-1 arrays/views: a multi-dimensional contiguous array must not be advertised as a 1d contiguous range, as that
+// would make nda::get_rank report 1 for it.
+static constexpr bool _is_contiguous_1d = (Rank == 1) and has_contiguous(layout_t::layout_prop);
 
-/// Iterator type of the view/array.
-using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolicy::template accessor<ValueType>::pointer>;
+/// Const iterator type of the view/array. For contiguous rank-1 arrays/views the iterator is a
+/// std::contiguous_iterator so that the type satisfies `std::ranges::contiguous_range`.
+using const_iterator =
+   array_iterator<iterator_rank, ValueType const, typename AccessorPolicy::template accessor<ValueType>::pointer, _is_contiguous_1d>;
+
+/// Iterator type of the view/array. For contiguous rank-1 arrays/views the iterator is a std::contiguous_iterator so
+/// that the type satisfies `std::ranges::contiguous_range`.
+using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolicy::template accessor<ValueType>::pointer, _is_contiguous_1d>;
 
 private:
 // Make an iterator for the view/array depending on its type.

@@ -486,6 +486,7 @@ namespace nda {
    * @return True if all elements are equal, false otherwise.
    */
   template <ArrayOfRank<1> A, std::ranges::contiguous_range R>
+    requires(not MemoryArray<R>)
   bool operator==(A const &a, R const &rg) {
     return a == basic_array_view{rg};
   }
@@ -501,6 +502,7 @@ namespace nda {
    * @return True if all elements are equal, false otherwise.
    */
   template <std::ranges::contiguous_range R, ArrayOfRank<1> A>
+    requires(not MemoryArray<R>)
   bool operator==(R const &rg, A const &a) {
     return a == rg;
   }
