@@ -27,6 +27,7 @@
 #include "./mem/fill.hpp"
 #include "./mem/memcpy.hpp"
 #include "./mem/policies.hpp"
+#include "./random.hpp"
 #include "./stdutil/array.hpp"
 #include "./traits.hpp"
 
@@ -444,16 +445,8 @@ namespace nda {
     static basic_array rand(std::array<Int, Rank> const &shape)
       requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>)
     {
-      auto static gen = std::mt19937_64{};
-      auto res        = basic_array{shape};
-      if constexpr (nda::is_complex_v<ValueType>) {
-        auto static dist = std::uniform_real_distribution<typename ValueType::value_type>(0.0, 1.0);
-        using namespace std::complex_literals;
-        for (auto &x : res) x = dist(gen) + 1i * dist(gen);
-      } else {
-        auto static dist = std::uniform_real_distribution<ValueType>(0.0, 1.0);
-        for (auto &x : res) x = dist(gen);
-      }
+      auto res = basic_array{shape};
+      nda::rng::global_rng().fill(res, nda::rng::uniform_distribution<ValueType>{});
       return res;
     }
 

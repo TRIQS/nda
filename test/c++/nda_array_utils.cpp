@@ -13,13 +13,13 @@
 struct NDAArrayUtilities : public ::testing::Test {
   protected:
   NDAArrayUtilities() {
-    A_d = nda::array<double, 3>::rand(arr_shape) - 0.5;
+    nda::rng::global_rng().fill(A_d, nda::rng::interval{-0.5, 0.5});
     M_l = nda::matrix<long>::ones(mat_shape);
     V_c = nda::vector<std::complex<double>>::rand(vec_shape);
   }
 
   std::array<long, 3> arr_shape{2, 3, 4};
-  nda::array<double, 3> A_d;
+  nda::array<double, 3> A_d{arr_shape};
   std::array<long, 2> mat_shape{3, 5};
   nda::matrix<long> M_l;
   std::array<long, 1> vec_shape{2};
