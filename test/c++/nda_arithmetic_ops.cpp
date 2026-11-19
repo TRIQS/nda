@@ -40,28 +40,31 @@ auto matrix_vector_multiplication(const A &a, const B &b) {
 struct NDAArithmeticOps : public ::testing::Test {
   protected:
   NDAArithmeticOps() {
-    A_d      = nda::array<double, 3>::rand(arr_shape) - 0.5;
-    A_c      = nda::array<std::complex<double>, 3>::rand(arr_shape) - std::complex<double>{0.5, 0.5};
-    M_d_sq   = nda::matrix<double>::rand(mat_sq_shape[0], mat_sq_shape[1]) - 0.5;
-    M_c_sq   = nda::matrix<std::complex<double>>::rand(mat_sq_shape[0], mat_sq_shape[1]) - std::complex<double>{0.5, 0.5};
-    M_d_rect = nda::matrix<double>::rand(mat_rect_shape[0], mat_rect_shape[1]) - 0.5;
-    M_c_rect = nda::matrix<std::complex<double>>::rand(mat_rect_shape[0], mat_rect_shape[1]) - std::complex<double>{0.5, 0.5};
-    V_d      = nda::vector<double>::rand(vec_shape[0]) - 0.5;
-    V_c      = nda::vector<std::complex<double>>::rand(vec_shape[0]) - std::complex<double>{0.5, 0.5};
+    auto const r = nda::rng::interval{-0.5, 0.5};
+    auto const c = nda::rng::rectangle{r, r};
+    auto &rng    = nda::rng::global_rng();
+    rng.fill(A_d, r);
+    rng.fill(A_c, c);
+    rng.fill(M_d_sq, r);
+    rng.fill(M_c_sq, c);
+    rng.fill(M_d_rect, r);
+    rng.fill(M_c_rect, c);
+    rng.fill(V_d, r);
+    rng.fill(V_c, c);
   }
 
   std::array<long, 3> arr_shape{2, 3, 4};
-  nda::array<double, 3> A_d;
-  nda::array<std::complex<double>, 3> A_c;
+  nda::array<double, 3> A_d{arr_shape};
+  nda::array<std::complex<double>, 3> A_c{arr_shape};
   std::array<long, 2> mat_sq_shape{3, 3};
-  nda::matrix<double> M_d_sq;
-  nda::matrix<std::complex<double>> M_c_sq;
+  nda::matrix<double> M_d_sq{mat_sq_shape};
+  nda::matrix<std::complex<double>> M_c_sq{mat_sq_shape};
   std::array<long, 2> mat_rect_shape{3, 5};
-  nda::matrix<double> M_d_rect;
-  nda::matrix<std::complex<double>> M_c_rect;
+  nda::matrix<double> M_d_rect{mat_rect_shape};
+  nda::matrix<std::complex<double>> M_c_rect{mat_rect_shape};
   std::array<long, 1> vec_shape{5};
-  nda::vector<double> V_d;
-  nda::vector<std::complex<double>> V_c;
+  nda::vector<double> V_d{vec_shape};
+  nda::vector<std::complex<double>> V_c{vec_shape};
   static constexpr auto z = std::complex<double>{2.0, 3.0};
   static constexpr auto x = 2.0;
 };

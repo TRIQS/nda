@@ -18,13 +18,16 @@
 struct NDAAlgorithm : public ::testing::Test {
   protected:
   NDAAlgorithm() {
-    A_d = nda::array<double, 3>::rand(shape) - 0.5;
-    A_c = nda::array<std::complex<double>, 3>::rand(shape) - std::complex<double>{0.5, 0.5};
+    auto const r = nda::rng::interval{-0.5, 0.5};
+    auto const c = nda::rng::rectangle{r, r};
+    auto &rng    = nda::rng::global_rng();
+    rng.fill(A_d, r);
+    rng.fill(A_c, c);
   }
 
   std::array<long, 3> shape{2, 3, 4};
-  nda::array<double, 3> A_d;
-  nda::array<std::complex<double>, 3> A_c;
+  nda::array<double, 3> A_d{shape};
+  nda::array<std::complex<double>, 3> A_c{shape};
   static auto constexpr nan = std::numeric_limits<double>::quiet_NaN();
 };
 

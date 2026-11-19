@@ -558,21 +558,22 @@ void check_eigen(auto const &A, auto const &V, auto const &l, bool is_left = fal
   }
 }
 
-void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
-  using fp_t = nda::get_fp_t<nda::get_value_t<decltype(A)>>;
+void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1,
+                 double tol = fp_tol<nda::get_fp_t<nda::get_value_t<decltype(A)>>>) {
   if (itype == 1) {
-    EXPECT_ARRAY_NEAR(A * V, B * V * nda::diag(l), fp_tol<fp_t>);
+    EXPECT_ARRAY_NEAR(A * V, B * V * nda::diag(l), tol);
   } else if (itype == 2) {
-    EXPECT_ARRAY_NEAR(A * B * V, V * nda::diag(l), fp_tol<fp_t>);
+    EXPECT_ARRAY_NEAR(A * B * V, V * nda::diag(l), tol);
   } else {
-    EXPECT_ARRAY_NEAR(B * A * V, V * nda::diag(l), fp_tol<fp_t>);
+    EXPECT_ARRAY_NEAR(B * A * V, V * nda::diag(l), tol);
   }
 }
 
-// Create a symmetric or hermitian matrix with restricted eigenvalues.
+// Create a symmetric or hermitian matrix Q * D * Q^H with the given eigenvalues.
 template <typename T>
-auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
+auto syhe_matrix(nda::vector<double> const &eigenvalues) {
   using matrix_t = nda::matrix<T, nda::F_layout>;
+  auto const n   = eigenvalues.size();
 
   // orthogonal/unitary matrix Q
   auto jpvt = nda::zeros<int>(n);
@@ -585,11 +586,17 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
     nda::lapack::orgqr(Q, tau);
   }
 
-  // diagonal matrix containing the eigenvalues
-  auto D = nda::eye<double>(n) * a + nda::diag(nda::vector<double>::rand(n)) * (b - a);
+  // Q * D * Q^H, symmetrized to remove rounding errors (hermitian/symmetric)
+  auto A = matrix_t{Q * nda::diag(eigenvalues) * nda::dagger(Q)};
+  return matrix_t{(A + nda::dagger(A)) / 2};
+}
 
-  // return Q * D * Q^H (hermitian/symmetric)
-  return matrix_t{Q * D * nda::dagger(Q)};
+// Create a symmetric or hermitian matrix with random eigenvalues in [a, b).
+template <typename T>
+auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
+  auto eigenvalues = nda::vector<double>(n);
+  nda::rng::global_rng().fill(eigenvalues, nda::rng::interval{a, b});
+  return syhe_matrix<T>(eigenvalues);
 }
 
 // Test LAPACK syev and heev functions.
@@ -649,21 +656,28 @@ void test_sygv_hegv(int itype, auto xxgv) {
   using fp_t = nda::get_fp_t<T>;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
-    auto B = syhe_matrix<T>(i, 1e-6, 1);
+
+    auto b_ev = nda::vector<double>(i);
+    nda::rng::global_rng().fill(b_ev, nda::rng::interval{1e-3, 1.0});
+    auto B             = syhe_matrix<T>(b_ev);
+    auto const b_min   = nda::min_element(b_ev);
+    auto const kappa   = nda::max_element(b_ev) / b_min;
+    auto const tol_vec = (1 + kappa) / std::sqrt(b_min) * fp_tol<fp_t>;
+    auto const tol_val = fp_tol<fp_t> / b_min;
 
     // compute eigenvalues and eigenvectors
     auto A1 = A;
     auto B1 = B;
     auto w1 = nda::vector<fp_t>(i);
     xxgv(A1, B1, w1, 'V', itype);
-    check_eigen(A, B, A1, w1, itype);
+    check_eigen(A, B, A1, w1, itype, tol_vec);
 
     // compute eigenvalues only
     auto A2 = A;
     auto B2 = B;
     auto w2 = nda::vector<fp_t>{};
     xxgv(A2, B2, w2, 'N', itype);
-    EXPECT_ARRAY_NEAR(w2, w1, fp_tol<T>);
+    EXPECT_ARRAY_NEAR(w2, w1, tol_val);
 
     // compute eigenvalues and eigenvectors of a view
     if (i > 3) {
@@ -672,7 +686,7 @@ void test_sygv_hegv(int itype, auto xxgv) {
       auto w3 = nda::vector<fp_t>{};
       auto rg = nda::range(3);
       xxgv(A3(rg, rg), B3(rg, rg), w3, 'V', itype);
-      check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype);
+      check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype, tol_vec);
     }
   }
 }

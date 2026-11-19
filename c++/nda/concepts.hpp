@@ -76,6 +76,13 @@ namespace nda {
   concept StdArrayOfLong = detail::is_std_array_of_long_v<T>;
 
   /**
+   * @brief Check if a given type is an arithmetic type, i.e. an integral or floating point type.
+   * @tparam S Type to check.
+   */
+  template <typename S>
+  concept Arithmetic = std::is_arithmetic_v<S>;
+
+  /**
    * @brief Check if a given type is either an arithmetic or complex type.
    * @tparam S Type to check.
    */

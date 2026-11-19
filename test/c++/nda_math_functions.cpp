@@ -17,13 +17,16 @@
 struct NDAMathFunction : public ::testing::Test {
   protected:
   NDAMathFunction() {
-    A_d = nda::array<double, 3>::rand(shape) - 0.5;
-    A_c = nda::array<std::complex<double>, 3>::rand(shape) - std::complex<double>{0.5, 0.5};
+    auto const r = nda::rng::interval{-0.5, 0.5};
+    auto const c = nda::rng::rectangle{r, r};
+    auto &rng    = nda::rng::global_rng();
+    rng.fill(A_d, r);
+    rng.fill(A_c, c);
   }
 
   std::array<long, 3> shape{2, 3, 4};
-  nda::array<double, 3> A_d;
-  nda::array<std::complex<double>, 3> A_c;
+  nda::array<double, 3> A_d{shape};
+  nda::array<std::complex<double>, 3> A_c{shape};
   static auto constexpr nan    = std::numeric_limits<double>::quiet_NaN();
   static auto constexpr dbl_c  = -0.1234;
   static auto constexpr cplx_c = std::complex<double>{-1.234, 2.345};
@@ -121,11 +124,16 @@ TEST_F(NDAMathFunction, Dagger) {
   using mat_d = nda::array<double, 2>;
   using mat_c = nda::array<std::complex<double>, 2>;
 
-  auto size = 5;
-  mat_d M_d = nda::array<double, 2>::rand(size, size) - 0.5;
-  mat_c M_c = nda::array<std::complex<double>, 2>::rand(size, size) - std::complex<double>{0.5, 0.5};
-  auto B_d  = nda::dagger(M_d);
-  auto B_c  = nda::dagger(M_c);
+  auto size    = 5;
+  auto const r = nda::rng::interval{-0.5, 0.5};
+  auto const c = nda::rng::rectangle{r, r};
+  auto &rng    = nda::rng::global_rng();
+  auto M_d     = mat_d(size, size);
+  auto M_c     = mat_c(size, size);
+  rng.fill(M_d, r);
+  rng.fill(M_c, c);
+  auto B_d = nda::dagger(M_d);
+  auto B_c = nda::dagger(M_c);
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
       EXPECT_EQ(B_d(i, j), M_d(j, i));
